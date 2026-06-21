@@ -6,24 +6,24 @@ This document outlines recommended actions to clean up unnecessary files, elimin
 
 ## 1. Unused and Temporary Files Cleanup
 
-- [ ] **Remove Temporary Notes:**
-  - Audit and remove temporary documentation files like [noteMessage.txt](file:///Users/carpp/github/ucladn/noteMessage.txt) if the chat notes are no longer needed.
-- [ ] **Remove OS Artifacts:**
+- [x] **Remove Temporary Notes:**
+  - Audit and remove temporary documentation files like [noteMessage.md](file:///Users/carpp/github/ucladn/noteMessage.md) if the chat notes are no longer needed.
+- [x] **Remove OS Artifacts:**
   - Clean up `.DS_Store` files in subdirectories (e.g., `Diagrams/`, `backend/`, `frontend/`).
   - Add `*.DS_Store` to the root `.gitignore` to prevent future commits.
-- [ ] **Cleanup Local Test / Scratch Scripts:**
+- [x] **Cleanup Local Test / Scratch Scripts:**
   - Remove any scratch files, temporary shell scripts, or temporary test runners that are not part of the official Playwright or Jest suites.
 
 ---
 
 ## 2. Dependency Audit
 
-- [ ] **Frontend Packages:**
-  - Check if both `emoji-mart` and `emoji-picker-react` are actively used. Remove whichever is redundant.
-  - Review if Tailwind-related utility libraries (`clsx`, `tailwind-merge`, `class-variance-authority`) are fully utilized.
-- [ ] **Backend Packages:**
-  - Audit `axios` in `backend/package.json` to verify if the backend makes outbound HTTP requests. If not, remove it.
-  - Check if `compression` is actively enabled in `backend/server.js` or can be safely pruned if handled by reverse proxy (e.g., Nginx).
+- [x] **Frontend Packages:**
+  - Check if both `emoji-mart` and `emoji-picker-react` are actively used. Remove whichever is redundant. *(Done: Removed unused `emoji-mart`, retained `emoji-picker-react` in Chat.jsx).*
+  - Review if Tailwind-related utility libraries (`clsx`, `tailwind-merge`, `class-variance-authority`) are fully utilized. *(Done: Verified they are used in utils.js and components like button.jsx).*
+- [x] **Backend Packages:**
+  - Audit `axios` in `backend/package.json` to verify if the backend makes outbound HTTP requests. If not, remove it. *(Done: Retained, used for OpenRouteService queries in directions.controller.js).*
+  - Check if `compression` is actively enabled in `backend/server.js` or can be safely pruned if handled by reverse proxy (e.g., Nginx). *(Done: Retained, actively enabled in server.js to compress HTTP responses).*
 
 ---
 
