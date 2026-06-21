@@ -6,12 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "@/config";
 import SecureImage from "@/components/SecureImage";
 
-function InfoPanel({
-  request,
-  clearSelection,
-  currentUserHasActiveDelivery,
-  // onRefresh is no longer needed as sockets handle updates
-}) {
+function InfoPanel({ request, clearSelection, currentUserHasActiveDelivery }) {
   const { user, authFetch } = useAuth();
   const { showToast } = useToast();
   const [uploading, setUploading] = useState(false);

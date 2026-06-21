@@ -14,6 +14,7 @@ export function SecureImage({ src, alt, className, fallbackSrc }) {
     }
 
     let active = true;
+    let localUrl = null;
     setLoading(true);
 
     const fetchImage = async () => {
@@ -22,8 +23,8 @@ export function SecureImage({ src, alt, className, fallbackSrc }) {
         if (res.ok) {
           const blob = await res.blob();
           if (active) {
-            const url = URL.createObjectURL(blob);
-            setObjectUrl(url);
+            localUrl = URL.createObjectURL(blob);
+            setObjectUrl(localUrl);
           }
         } else {
           if (active) setObjectUrl(null);
@@ -40,8 +41,8 @@ export function SecureImage({ src, alt, className, fallbackSrc }) {
 
     return () => {
       active = false;
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl);
+      if (localUrl) {
+        URL.revokeObjectURL(localUrl);
       }
     };
   }, [src]);

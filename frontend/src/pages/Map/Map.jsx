@@ -274,7 +274,6 @@ function MapScreen() {
             req.helperId === routesManager.currentUserId &&
             req.status === "accepted"
         )}
-        onRefresh={refreshData}
       />
     </div>
   );
@@ -352,14 +351,6 @@ function MapCore({
           handleMarkerClick={handleMarkerClick}
         />
       )}
-      {/* requests.map((req) => (
-        <RequestMarker
-          request={req}
-          type="dropoff"
-          handleMarkerClick={handleMarkerClick}
-        />
-        )) */}
-      {/* FIXME: Add dropoff marker toggle maybe? */}
 
       {/* Polylines */}
       {routesManager.routes.map((route) => {

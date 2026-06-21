@@ -171,13 +171,6 @@ function App() {
                   <Link onClick={logout} className="text-destructive">
                     Logout
                   </Link>
-                  {/* <Button
-                    onClick={logout}
-                    variant="destructive"
-                    className="max-w-xs"
-                  >
-                    Logout
-                  </Button> */}
                 </>
               )}
 

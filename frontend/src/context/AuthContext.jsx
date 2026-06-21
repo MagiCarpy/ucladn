@@ -73,8 +73,6 @@ export const AuthProvider = ({ children }) => {
     const data = resp.json();
     setUser(null);
     navigate("/dashboard", { replace: true });
-
-    console.log("Logged Out");
   };
 
   const authFetch = async (url, options = {}) => {

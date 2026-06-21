@@ -8,8 +8,6 @@ import SecureImage from "@/components/SecureImage";
 import EmojiPicker from "emoji-picker-react";
 import Loading from "../pages/Loading/Loading";
 
-const POLLING_RATE = 3000;
-
 const Chat = ({ requestId }) => {
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);

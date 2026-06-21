@@ -88,7 +88,6 @@ function LoginSignup({ signingUp }) {
     }
 
     setIsSubmitting(false);
-    console.log("Signing Up");
   }
 
   const handleSwitch = (e, type) => {

@@ -53,9 +53,6 @@ router.post("/seed/archive", requireAuth, async (req, res) => {
       "../models/archivedRequest.model.js"
     );
 
-    console.log("REQ USER:", req.user); // LOG AUTH
-    console.log("ARCHIVED MODEL LOADED"); // LOG MODEL
-
     const userId = req.user?.id;
     if (!userId) {
       throw new Error("No userId found — authentication failed?");

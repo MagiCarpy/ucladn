@@ -9,14 +9,6 @@ import path from "path";
 import fs from "fs/promises";
 import crypto from "crypto";
 
-const ALLOWED_MIMES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/gif",
-  "image/webp",
-];
-
 const MessageController = {
   sendMessage: asyncHandler(async (req, res) => {
     const { requestId } = req.params;
