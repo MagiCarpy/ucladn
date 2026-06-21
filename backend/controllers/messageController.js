@@ -1,7 +1,8 @@
 import { Message } from "../models/message.model.js";
 import { Request } from "../models/request.model.js";
 import { User } from "../models/user.model.js";
-import { PUBLIC_PATH } from "../config/paths.js";
+import { ArchivedRequest } from "../models/archivedRequest.model.js";
+import { PUBLIC_PATH, UPLOADS_PATH } from "../config/paths.js";
 import { validateImgFile } from "../middleware/imgFileValidator.js";
 import asyncHandler from "express-async-handler";
 import path from "path";
@@ -50,10 +51,9 @@ const MessageController = {
 
         const ext = path.extname(req.file.originalname).toLowerCase();
         const filename = `msg-${requestId}-${Date.now()}-${crypto.randomUUID()}${ext}`;
-        const uploadPath = path.join(PUBLIC_PATH, filename);
+        const uploadPath = path.join(UPLOADS_PATH, filename);
 
-        // Save file to filepath (public state)
-        // FIXME: will want to upload to secure folder only accessible through api call.
+        // Save file to filepath (private secure)
         await fs.writeFile(uploadPath, req.file.buffer);
         attachmentUrl = filename;
       } catch (err) {
@@ -126,6 +126,49 @@ const MessageController = {
     );
 
     return res.status(200).json({ messages: enrichedMessages });
+  }),
+
+  getAttachment: asyncHandler(async (req, res) => {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const { filename } = req.params;
+
+    // Find the message that holds this attachment
+    const message = await Message.findOne({ where: { attachment: filename } });
+    if (!message) {
+      return res.sendFile(path.join(PUBLIC_PATH, "default.jpg"));
+    }
+
+    // Find the request associated with the message
+    let request = await Request.findByPk(message.requestId);
+
+    if (!request) {
+      request = await ArchivedRequest.findOne({ where: { originalRequestId: message.requestId } });
+      if (!request) {
+        request = await ArchivedRequest.findByPk(message.requestId);
+      }
+    }
+
+    if (!request) {
+      return res.sendFile(path.join(PUBLIC_PATH, "default.jpg"));
+    }
+
+    // Verify authorization: Only requester or helper
+    if (request.userId !== req.user.id && request.helperId !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to view this attachment" });
+    }
+
+    let filePath = path.join(PUBLIC_PATH, "default.jpg");
+    const targetPath = path.join(UPLOADS_PATH, filename);
+    try {
+      await fs.access(targetPath);
+      filePath = targetPath;
+    } catch (err) {
+      // File does not exist on disk, fallback to default.jpg
+    }
+    res.sendFile(filePath);
   }),
 };
 

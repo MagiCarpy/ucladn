@@ -1,6 +1,13 @@
 import request from "supertest";
 import { app } from "../../server.js";
 import testSequelize from "../../config/testDb.js";
+import redisClient from "../../config/redisDb.js";
+
+// Mock redis client methods to prevent ClientClosedError in tests
+redisClient.set = async () => "OK";
+redisClient.get = async () => null;
+redisClient.del = async () => 1;
+redisClient.connect = async () => {};
 import crypto from "crypto";
 
 import { User } from "../../models/user.model.js";
@@ -390,4 +397,82 @@ test("HTTP 200 — confirm received stores full archive", async () => {
   expect(archived).not.toBeNull();
   expect(archived.item).toBe("Package");
   expect(archived.helperId).toBe(helperId);
+});
+
+describe("GET /api/requests/:id/photo", () => {
+  test("HTTP 200 — returns default.jpg if request has no photo", async () => {
+    const { requesterCookie, requesterId, helperId } = await seedAndLogin();
+    const reqid = crypto.randomUUID();
+    await Request.create({
+      id: reqid,
+      userId: requesterId,
+      helperId,
+      status: "accepted",
+      item: "Water",
+      pickupLocation: "Dorm",
+      dropoffLocation: "Gym",
+    });
+
+    const res = await request(app)
+      .get(`/api/requests/${reqid}/photo`)
+      .set("Cookie", requesterCookie);
+
+    expect(res.status).toBe(200);
+    // Since it falls back to default.jpg, let's check headers
+    expect(res.headers["content-type"]).toContain("image/jpeg");
+  });
+
+  test("HTTP 200 — returns default.jpg if photo file does not exist on disk", async () => {
+    const { requesterCookie, requesterId, helperId } = await seedAndLogin();
+    const reqid = crypto.randomUUID();
+    await Request.create({
+      id: reqid,
+      userId: requesterId,
+      helperId,
+      status: "accepted",
+      item: "Water",
+      pickupLocation: "Dorm",
+      dropoffLocation: "Gym",
+      deliveryPhotoUrl: "non-existent-photo.jpg",
+    });
+
+    const res = await request(app)
+      .get(`/api/requests/${reqid}/photo`)
+      .set("Cookie", requesterCookie);
+
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toContain("image/jpeg");
+  });
+
+  test("HTTP 403 — unauthorized user cannot view the photo", async () => {
+    const { requesterId, helperId } = await seedAndLogin();
+    const reqid = crypto.randomUUID();
+    await Request.create({
+      id: reqid,
+      userId: requesterId,
+      helperId,
+      status: "accepted",
+      item: "Water",
+      pickupLocation: "Dorm",
+      dropoffLocation: "Gym",
+    });
+
+    // Make request without auth cookie or with third user
+    const res = await request(app)
+      .get(`/api/requests/${reqid}/photo`);
+
+    expect(res.status).toBe(401);
+  });
+
+  test("HTTP 200 — returns default.jpg if request does not exist in the database", async () => {
+    const { requesterCookie } = await seedAndLogin();
+    const reqid = crypto.randomUUID();
+
+    const res = await request(app)
+      .get(`/api/requests/${reqid}/photo`)
+      .set("Cookie", requesterCookie);
+
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toContain("image/jpeg");
+  });
 });

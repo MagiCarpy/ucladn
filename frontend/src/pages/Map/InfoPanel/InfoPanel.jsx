@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { useToast } from "@/context/toastContext";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "@/config";
+import SecureImage from "@/components/SecureImage";
 
 function InfoPanel({
   request,
@@ -14,7 +15,26 @@ function InfoPanel({
   const { user, authFetch } = useAuth();
   const { showToast } = useToast();
   const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [localPreviewUrl, setLocalPreviewUrl] = useState(null);
+  const fileInputRef = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    return () => {
+      if (localPreviewUrl) {
+        URL.revokeObjectURL(localPreviewUrl);
+      }
+    };
+  }, [localPreviewUrl]);
+
+  useEffect(() => {
+    setSelectedFile(null);
+    setLocalPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }, [request?.id, request?.status, request?.helperId]);
 
   const isHelper = user?.userId === request?.helperId;
   const isOwner = user?.userId === request?.userId;
@@ -75,7 +95,7 @@ function InfoPanel({
       `/api/requests/${request.id}/cancel-delivery`,
       {
         method: "POST",
-      }
+      },
     );
 
     const data = await resp.json();
@@ -86,27 +106,67 @@ function InfoPanel({
     }
 
     showToast("Delivery canceled", "info");
+    setSelectedFile(null);
+    setLocalPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
     // clearSelection(); // Optional: user might want to see it revert to open?
     // Usually keep selection open unless it's gone.
     // If we clear selection, they lose context. let's keep it (it will update to open).
   };
 
   const completeDelivery = async () => {
+    setUploading(true);
+
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("photo", selectedFile);
+
+      try {
+        const resp = await authFetch(
+          `/api/requests/${request.id}/upload-photo`,
+          {
+            method: "POST",
+            body: formData,
+          },
+        );
+
+        if (!resp.ok) {
+          const data = await resp.json();
+          showToast(data.message || "Failed to upload photo", "error");
+          setUploading(false);
+          return;
+        }
+      } catch (err) {
+        console.error("Upload error during submit:", err);
+        showToast("Failed to upload delivery photo", "error");
+        setUploading(false);
+        return;
+      }
+    }
+
     const resp = await authFetch(
       `/api/requests/${request.id}/complete-delivery`,
       {
         method: "POST",
-      }
+      },
     );
 
     const data = await resp.json();
 
     if (!resp.ok) {
       showToast(data.message || "Could not complete delivery", "error");
+      setUploading(false);
       return;
     }
     showToast("Delivery completed!", "success");
-    // Don't clear selection, let user see the status change to completed
+    setSelectedFile(null);
+    setLocalPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    setUploading(false);
   };
 
   const confirmReceived = async () => {
@@ -124,33 +184,16 @@ function InfoPanel({
     showToast("Delivery marked as NOT received", "error");
   };
 
-  const handlePhotoUpload = async (e) => {
+  const handlePhotoSelect = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    setUploading(true);
-
-    let formData = new FormData();
-    formData.append("photo", file);
-
-    try {
-      const resp = await authFetch(`/api/requests/${request.id}/upload-photo`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!resp.ok) {
-        console.error("Upload failed. Status code:", resp.status);
-        setUploading(false);
-        return;
-      }
-
-      // Sockets will update the image URL
-    } catch (err) {
-      console.error("Upload failed:", err);
-    } finally {
-      setUploading(false);
+    if (localPreviewUrl) {
+      URL.revokeObjectURL(localPreviewUrl);
     }
+
+    setSelectedFile(file);
+    setLocalPreviewUrl(URL.createObjectURL(file));
   };
 
   return (
@@ -195,8 +238,8 @@ function InfoPanel({
               request.status === "open"
                 ? "bg-blue-100 text-blue-800"
                 : request.status === "accepted"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-green-100 text-green-800"
+                  ? "bg-yellow-100 text-yellow-800"
+                  : "bg-green-100 text-green-800"
             }`}
           >
             {request.status}
@@ -227,27 +270,38 @@ function InfoPanel({
             Delivery Confirmation
           </span>
 
-          {uploadedPhoto ? (
-            <img
-              src={`${API_BASE_URL}/public/${uploadedPhoto}`}
+          {localPreviewUrl ? (
+            <div className="space-y-1">
+              <img
+                src={localPreviewUrl}
+                alt="Delivery Confirmation Preview"
+                className="rounded border w-full object-cover max-h-48"
+              />
+            </div>
+          ) : uploadedPhoto ? (
+            <SecureImage
+              src={`/api/requests/${request.id}/photo`}
               alt="Delivery Confirmation"
               className="rounded border w-full"
             />
           ) : (
             <p className="text-sm text-muted-foreground">
-              No photo uploaded yet.
+              No photo selected or uploaded yet.
             </p>
           )}
 
           <input
             type="file"
             accept="image/*"
-            onChange={handlePhotoUpload}
+            ref={fileInputRef}
+            onChange={handlePhotoSelect}
             disabled={uploading}
             className="text-sm"
           />
 
-          {uploading && <p className="text-xs text-yellow-600">Uploading...</p>}
+          {uploading && (
+            <p className="text-xs text-yellow-600">Processing...</p>
+          )}
         </div>
       )}
 
@@ -285,14 +339,19 @@ function InfoPanel({
         )}
 
         {/* COMPLETE DELIVERY (helper only) */}
-        {isHelper && request.status === "accepted" && uploadedPhoto && (
-          <Button
-            onClick={completeDelivery}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Mark Delivery as Completed
-          </Button>
-        )}
+        {isHelper &&
+          request.status === "accepted" &&
+          (uploadedPhoto || selectedFile) && (
+            <Button
+              onClick={completeDelivery}
+              disabled={uploading}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              {uploading
+                ? "Completing Delivery..."
+                : "Mark Delivery as Completed"}
+            </Button>
+          )}
 
         {isHelper && request.status === "accepted" && (
           <Button

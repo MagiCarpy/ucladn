@@ -3,7 +3,7 @@ import { Message } from "../models/message.model.js";
 import { ArchivedRequest } from "../models/archivedRequest.model.js";
 import { validateImgFile } from "../middleware/imgFileValidator.js";
 import { User } from "../models/user.model.js";
-import { PUBLIC_PATH } from "../config/paths.js";
+import { PUBLIC_PATH, UPLOADS_PATH } from "../config/paths.js";
 import fs from "fs/promises";
 import asyncHandler from "express-async-handler";
 import path from "path";
@@ -170,9 +170,9 @@ const RequestController = {
     const filename = `msg-${
       reqData.id
     }-${Date.now()}-${crypto.randomUUID()}${ext}`;
-    const uploadPath = path.join(PUBLIC_PATH, filename);
+    const uploadPath = path.join(UPLOADS_PATH, filename);
 
-    // Save file to filepath (public static)
+    // Save file to filepath (private secure)
     await fs.writeFile(uploadPath, req.file.buffer);
     reqData.deliveryPhotoUrl = filename;
     await reqData.save();
@@ -189,6 +189,45 @@ const RequestController = {
       message: "Photo uploaded successfully",
       url: reqData.deliveryPhotoUrl,
     });
+  }),
+
+  // GET PHOTO (secure authenticated download)
+  getPhoto: asyncHandler(async (req, res) => {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const id = req.params.id;
+    let reqData = await Request.findByPk(id);
+
+    if (!reqData) {
+      reqData = await ArchivedRequest.findOne({ where: { originalRequestId: id } });
+      if (!reqData) {
+        reqData = await ArchivedRequest.findByPk(id);
+      }
+    }
+
+    if (!reqData) {
+      return res.sendFile(path.join(PUBLIC_PATH, "default.jpg"));
+    }
+
+    if (reqData.userId !== req.user.id && reqData.helperId !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to view this photo" });
+    }
+
+    let filePath = path.join(PUBLIC_PATH, "default.jpg");
+
+    if (reqData.deliveryPhotoUrl) {
+      const targetPath = path.join(UPLOADS_PATH, reqData.deliveryPhotoUrl);
+      try {
+        await fs.access(targetPath);
+        filePath = targetPath;
+      } catch (err) {
+        // File does not exist on disk, fallback to default.jpg
+      }
+    }
+
+    res.sendFile(filePath);
   }),
 
   // COMPLETE DELIVERY (helper)

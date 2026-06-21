@@ -11,6 +11,7 @@ router.post(
   upload.single("attachment"),
   MessageController.sendMessage
 );
+router.get("/attachment/:filename", requireAuth, MessageController.getAttachment);
 router.get("/:requestId", requireAuth, MessageController.getMessages);
 
 export default router;

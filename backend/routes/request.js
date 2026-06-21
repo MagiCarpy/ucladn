@@ -19,6 +19,12 @@ router.post(
   RequestController.uploadPhoto
 );
 
+router.get(
+  "/:id/photo",
+  requireAuth,
+  RequestController.getPhoto
+);
+
 router.post(
   "/:id/complete-delivery",
   requireAuth,

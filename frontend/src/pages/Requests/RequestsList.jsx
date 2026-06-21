@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/context/toastContext";
 import { useSocket } from "../../context/SocketContext";
 import Loading from "../Loading/Loading";
+import { API_BASE_URL } from "@/config";
 
 function RequestsList() {
   const socket = useSocket();
@@ -157,7 +158,7 @@ function RequestsList() {
           {searchQuery != user.username && (
             <img
               className="w-6 h-6 rounded-full shadow-md object-cover border-2 border-blue-400 dark:border-blue-300"
-              src={user.profileImg || "default.jpg"}
+              src={`${API_BASE_URL}/public/${user?.profileImg || "default.jpg"}`}
             ></img>
           )}
         </Button>

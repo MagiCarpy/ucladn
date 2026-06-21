@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { Smile, Paperclip, X, ArrowUp } from "lucide-react";
 import { API_BASE_URL } from "@/config";
 import { useSocket } from "@/context/SocketContext";
+import SecureImage from "@/components/SecureImage";
 import EmojiPicker from "emoji-picker-react";
 import Loading from "../pages/Loading/Loading";
 
@@ -123,8 +124,8 @@ const Chat = ({ requestId }) => {
                     }`}
                   >
                     {msg.attachment && (
-                      <img
-                        src={`${API_BASE_URL}/public/${msg.attachment}`}
+                      <SecureImage
+                        src={`/api/messages/attachment/${msg.attachment}`}
                         alt="attachment"
                         className="mb-2 rounded-md max-w-full max-h-60 object-cover"
                       />

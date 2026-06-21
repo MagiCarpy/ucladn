@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import { sequelize, createDatabaseIfNotExists } from "./config/db.js";
 import { connectRedis } from "./config/redisDb.js";
 import { ROOT_ENV_PATH, PUBLIC_PATH, UPLOADS_PATH } from "./config/paths.js";
@@ -87,10 +88,23 @@ app.use((req, res, next) => {
 // serve static files
 app.use("/public", express.static(PUBLIC_PATH));
 
+// Fallback for missing public images (like profile pictures)
+app.use("/public", (req, res, next) => {
+  const ext = path.extname(req.path).toLowerCase();
+  const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
+  if (imageExtensions.includes(ext)) {
+    return res.sendFile(path.join(PUBLIC_PATH, "default.jpg"));
+  }
+  next();
+});
+
 import messageRoutes from "./routes/message.js";
 import "./models/message.model.js";
 
-app.use("/uploads", express.static(UPLOADS_PATH));
+import fs from "fs/promises";
+
+// Ensure uploads folder exists
+await fs.mkdir(UPLOADS_PATH, { recursive: true }).catch(() => {});
 
 app.use("/api/user", userRoutes);
 app.use("/api/health", healthRoutes);

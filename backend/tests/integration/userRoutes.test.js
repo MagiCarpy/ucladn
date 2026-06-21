@@ -4,6 +4,13 @@ import { User } from "../../models/user.model.js";
 import { app } from "../../server.js";
 import { PUBLIC_PATH } from "../../config/paths.js";
 import testSequelize from "../../config/testDb.js";
+import redisClient from "../../config/redisDb.js";
+
+// Mock redis client methods to prevent ClientClosedError in tests
+redisClient.set = async () => "OK";
+redisClient.get = async () => null;
+redisClient.del = async () => 1;
+redisClient.connect = async () => {};
 
 // Recreate tables and add data
 beforeEach(async () => {
