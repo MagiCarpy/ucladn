@@ -19,29 +19,29 @@ const Chat = ({ requestId }) => {
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  // Replace fetchMessages with socket io
-  const fetchMessages = async () => {
-    try {
-      const resp = await fetch(`${API_BASE_URL}/api/messages/${requestId}`, {
-        credentials: "include",
-      });
-      if (resp.ok) {
-        const data = await resp.json();
-
-        setMessages(data.messages);
-      }
-    } catch (error) {
-      console.error("Failed to fetch messages", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // FIXME: may be used later
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // };
 
   useEffect(() => {
+    // Replace fetchMessages with socket io
+    const fetchMessages = async () => {
+      try {
+        const resp = await fetch(`${API_BASE_URL}/api/messages/${requestId}`, {
+          credentials: "include",
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          setMessages(data.messages);
+        }
+      } catch (error) {
+        console.error("Failed to fetch messages", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     socket.emit("join_chat", requestId);
     fetchMessages();
 

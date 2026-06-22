@@ -15,7 +15,7 @@ vi.mock('../../context/AuthContext', () => ({
 }));
 
 // Mock fetch
-global.fetch = vi.fn(() =>
+globalThis.fetch = vi.fn(() =>
     Promise.resolve({
         json: () => Promise.resolve({
             requests: [

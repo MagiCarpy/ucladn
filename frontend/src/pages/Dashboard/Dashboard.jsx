@@ -3,7 +3,7 @@ import MapScreen from "../Map/Map";
 import { useAuth } from "../../context/AuthContext";
 
 function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <div className="flex flex-col w-full h-full">

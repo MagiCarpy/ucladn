@@ -45,7 +45,7 @@ export function SecureImage({ src, alt, className, fallbackSrc }) {
         URL.revokeObjectURL(localUrl);
       }
     };
-  }, [src]);
+  }, [src, authFetch]);
 
   if (loading) {
     return <div className={`animate-pulse bg-muted rounded-md ${className}`} style={{ minHeight: "150px" }} />;

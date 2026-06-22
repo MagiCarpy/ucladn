@@ -90,11 +90,6 @@ function LoginSignup({ signingUp }) {
     setIsSubmitting(false);
   }
 
-  const handleSwitch = (e, type) => {
-    e.preventDefault();
-    setLoggingIn(type === "login");
-  };
-
   return (
     <div className="flex items-center justify-center min-h-[80vh] p-6">
       <Card className="w-full max-w-md border border-border shadow-md">

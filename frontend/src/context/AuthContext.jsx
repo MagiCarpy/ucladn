@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "@/config";
 
@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
         } else {
           setUser(null);
         }
-      } catch (err) {
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);
@@ -66,16 +66,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    const resp = await fetch(`${API_BASE_URL}/api/user/logout`, {
+    await fetch(`${API_BASE_URL}/api/user/logout`, {
       method: "GET",
       credentials: "include",
-    });
-    const data = resp.json();
+    }).catch(() => {});
     setUser(null);
     navigate("/dashboard", { replace: true });
   };
 
-  const authFetch = async (url, options = {}) => {
+  const authFetch = useCallback(async (url, options = {}) => {
     const res = await fetch(`${API_BASE_URL}${url}`, {
       ...options,
       credentials: "include",
@@ -87,11 +86,11 @@ export const AuthProvider = ({ children }) => {
     }
 
     return res;
-  };
+  }, [navigate]);
 
-  const updateUser = (updates) => {
+  const updateUser = useCallback((updates) => {
     setUser((prevUser) => (prevUser ? { ...prevUser, ...updates } : null));
-  };
+  }, []);
 
   return (
     <AuthContext.Provider

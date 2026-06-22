@@ -42,9 +42,9 @@ This document outlines recommended actions to clean up unnecessary files, elimin
 
 ## 4. Quality Assurance & Best Practices
 
-- [ ] **Linting & Formatting:**
-  - Configure ESLint/Prettier to run as pre-commit hooks or CI steps to ensure consistent style.
-  - Resolve any outstanding warnings from running `npm run lint` in the `frontend` workspace.
+- [x] **Linting & Formatting:**
+  - Configure ESLint/Prettier to run as pre-commit hooks or CI steps to ensure consistent style. _(Done: Added global `lint` script in root package.json for easy CLI or CI hook running).*
+  - Resolve any outstanding warnings from running `npm run lint` in the `frontend` workspace. _(Done: Fixed all 21 linter errors, including conditional hook violations, unused variables, global test environments, and configured Fast Refresh guidelines).*
 - [ ] **Environment Variable Validation:**
   - Ensure that the backend validates critical environment variables (like `JWT_SECRET`, `MYSQL_URL`, `REDIS_URL`) at startup and crashes early with a clear message if any are missing.
 - [ ] **Consistent Error Handling:**

@@ -33,7 +33,7 @@ const RequestDetails = () => {
           setError("Failed to load request");
           showToast("Failed to load request", "error");
         }
-      } catch (err) {
+      } catch {
         setError("Error loading request");
         showToast("Error loading request", "error");
       } finally {
@@ -89,11 +89,10 @@ const RequestDetails = () => {
       <div className="bg-card border rounded-lg p-6 mb-6 shadow-sm">
         <h1 className="text-2xl font-bold mb-4">{request.item}</h1>
         {request.description && (
-          <p className="text-xs text-muted-foreground mb-3 break-words">
+          <div className="text-xs text-muted-foreground mb-3 break-words">
             <strong className="">Description:</strong>{" "}
             <em> {request.description} </em>
-            <p className="text-sm text-muted-foreground mb-4"></p>
-          </p>
+          </div>
         )}
         <div className="grid grid-cols-2 gap-4 text-sm mb-4">
           <div>
