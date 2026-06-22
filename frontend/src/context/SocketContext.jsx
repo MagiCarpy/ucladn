@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { API_BASE_URL } from "@/config";
 
 const SocketContext = createContext(null);
 
@@ -11,12 +12,8 @@ export const SocketProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
-        // socket connection INIT
-        // in prod, sent to backend URL
-        const API_URL =
-            import.meta.env.MODE === "production"
-                ? window.location.origin
-                : "http://localhost:5000";
+        // use unified API base URL config
+        const API_URL = API_BASE_URL || window.location.origin;
 
         const newSocket = io(API_URL, {
             withCredentials: true,
