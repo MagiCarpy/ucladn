@@ -11,6 +11,7 @@ import compression from "compression";
 import helmet from "helmet";
 import cors from "cors";
 import dotenv from "dotenv";
+import { validateEnv } from "./config/envValidator.js";
 import userRoutes from "./routes/user.js";
 import healthRoutes from "./routes/health.js";
 import requestRoutes from "./routes/request.js";
@@ -21,6 +22,7 @@ import "./models/message.model.js";
 import "./models/associations.js";
 
 dotenv.config({ path: ROOT_ENV_PATH });
+validateEnv();
 
 const PORT = parseInt(process.env.PORT) || 5000;
 
@@ -67,7 +69,7 @@ app.use(
       styleSrc: ["'self'", "/"],
       imgSrc: ["'self'", "/", "data:"],
     },
-  })
+  }),
 );
 app.use(cookieParser());
 app.use(express.json());
@@ -76,7 +78,7 @@ app.use(
   cors({
     origin: true,
     credentials: true,
-  })
+  }),
 );
 
 // socket middleware
@@ -114,7 +116,19 @@ app.use("/api/messages", messageRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
-  console.error("Error", err);
+  console.error("Error:", err);
+
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  // Handle Multer upload limits/errors cleanly
+  if (err.code === "LIMIT_FILE_SIZE") {
+    return res
+      .status(400)
+      .json({ error: "File size limit exceeded (max 5MB)" });
+  }
+
   res.status(500).json({ error: "Internal server error" });
 });
 
@@ -123,7 +137,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(ROOT_PATH, "frontend", "dist")));
 
   app.get("*", (req, res) =>
-    res.sendFile(path.resolve(ROOT_PATH, "frontend", "dist", "index.html"))
+    res.sendFile(path.resolve(ROOT_PATH, "frontend", "dist", "index.html")),
   );
 } else {
   app.get("/", (req, res) => {

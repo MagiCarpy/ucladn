@@ -30,23 +30,23 @@ This document outlines recommended actions to clean up unnecessary files, elimin
 ## 3. Code Clean-Up & Refactoring
 
 - [x] **Remove Debugging Logs:**
-  - Search for and remove verbose `console.log()` statements used during debugging in controller and route files (e.g., `requestController.js`, `messageController.js`). _(Done: Cleaned logs from archive seed routes, LoginSignup, and AuthContext).*
+  - Search for and remove verbose `console.log()` statements used during debugging in controller and route files (e.g., `requestController.js`, `messageController.js`). \_(Done: Cleaned logs from archive seed routes, LoginSignup, and AuthContext).\*
 - [x] **Prune Dead Code:**
-  - Remove commented-out code blocks in React components (`Chat.jsx`, `InfoPanel.jsx`) and Express routers. _(Done: Cleaned unused POLLING_RATE from Chat, dead mobile logout button from App.jsx, and commented-out dropoff markers and redundant props in Map/InfoPanel).*
-  - Clean up unused variable and module imports flagged by the linter. _(Done: Removed unused ALLOWED_MIMES import/array from messageController).*
+  - Remove commented-out code blocks in React components (`Chat.jsx`, `InfoPanel.jsx`) and Express routers. \_(Done: Cleaned unused POLLING_RATE from Chat, dead mobile logout button from App.jsx, and commented-out dropoff markers and redundant props in Map/InfoPanel).\*
+  - Clean up unused variable and module imports flagged by the linter. \_(Done: Removed unused ALLOWED_MIMES import/array from messageController).\*
 - [x] **Review Memory Management:**
-  - Verify that React hooks and socket listeners in `Chat.jsx` and other realtime components cleanly unsubscribe/disconnect on unmount to prevent memory leaks. _(Done: Verified all socket listener cleanups run on unmount).*
-  - Double-check that all Object URLs created via `URL.createObjectURL` are properly revoked via `URL.revokeObjectURL` (as implemented in `SecureImage.jsx`). _(Done: Resolved closure scope bug in SecureImage.jsx by capturing generated URLs in a local variable before async operations).*
+  - Verify that React hooks and socket listeners in `Chat.jsx` and other realtime components cleanly unsubscribe/disconnect on unmount to prevent memory leaks. \_(Done: Verified all socket listener cleanups run on unmount).\*
+  - Double-check that all Object URLs created via `URL.createObjectURL` are properly revoked via `URL.revokeObjectURL` (as implemented in `SecureImage.jsx`). \_(Done: Resolved closure scope bug in SecureImage.jsx by capturing generated URLs in a local variable before async operations).\*
 
 ---
 
 ## 4. Quality Assurance & Best Practices
 
 - [x] **Linting & Formatting:**
-  - Configure ESLint/Prettier to run as pre-commit hooks or CI steps to ensure consistent style. _(Done: Added global `lint` script in root package.json for easy CLI or CI hook running).*
-  - Resolve any outstanding warnings from running `npm run lint` in the `frontend` workspace. _(Done: Fixed all 21 linter errors, including conditional hook violations, unused variables, global test environments, and configured Fast Refresh guidelines).*
-- [ ] **Environment Variable Validation:**
-  - Ensure that the backend validates critical environment variables (like `JWT_SECRET`, `MYSQL_URL`, `REDIS_URL`) at startup and crashes early with a clear message if any are missing.
-- [ ] **Consistent Error Handling:**
+  - Configure ESLint/Prettier to run as pre-commit hooks or CI steps to ensure consistent style. \_(Done: Added global `lint` script in root package.json for easy CLI or CI hook running).\*
+  - Resolve any outstanding warnings from running `npm run lint` in the `frontend` workspace. \_(Done: Fixed all 21 linter errors, including conditional hook violations, unused variables, global test environments, and configured Fast Refresh guidelines).\*
+- [x] **Environment Variable Validation:**
+  - Ensure that the backend validates critical environment variables (like `JWT_SECRET`, `MYSQL_URL`, `REDIS_URL`) at startup and crashes early with a clear message if any are missing. \_(Done: Built envValidator.js checking for critical database, security, and openrouteservice API keys on server startup, bypassing in test environment for CI flexibility).\*
+- [x] **Consistent Error Handling:**
   - Ensure all async Express routes are wrapped with `express-async-handler` (or equivalent try/catch blocks) and that the global error-handling middleware is used.
   - Never leak database connection strings or raw Sequelize stack traces in API error responses to clients.

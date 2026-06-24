@@ -28,7 +28,7 @@ await fs.mkdir(PUBLIC_PATH, { recursive: true }).catch(() => {}); // FIXME: deal
 dotenv.config({ path: ROOT_ENV_PATH });
 
 const UserController = {
-  register: asyncHandler(async (req, res) => {
+  register: asyncHandler(async (req, res, next) => {
     const { username, email, password } = req.body;
 
     try {

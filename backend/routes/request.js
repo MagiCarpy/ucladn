@@ -3,6 +3,7 @@ import RequestController from "../controllers/requestController.js";
 import requireAuth from "../middleware/auth.js";
 import { upload } from "../middleware/imgFileValidator.js";
 import { v4 as uuidv4 } from "uuid";
+import asyncHandler from "express-async-handler";
 
 const router = express.Router();
 
@@ -47,7 +48,7 @@ router.post(
 );
 router.delete("/:id", requireAuth, RequestController.delete);
 
-router.post("/seed/archive", requireAuth, async (req, res) => {
+router.post("/seed/archive", requireAuth, asyncHandler(async (req, res) => {
   try {
     const { ArchivedRequest } = await import(
       "../models/archivedRequest.model.js"
@@ -90,8 +91,8 @@ router.post("/seed/archive", requireAuth, async (req, res) => {
     });
   } catch (err) {
     console.error("SEED ERROR DETAILS:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Failed to seed archived history" });
   }
-});
+}));
 
 export default router;

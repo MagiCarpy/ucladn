@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }) => {
       credentials: "include",
     });
 
-    if (res.status >= 400 && res.status < 500) {
+    if (res.status === 401) {
       setUser(null);
       navigate("/login", { replace: true });
     }

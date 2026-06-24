@@ -3,6 +3,7 @@ import { ROOT_ENV_PATH } from "../config/paths.js";
 import redisClient from "../config/redisDb.js";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import asyncHandler from "express-async-handler";
 
 dotenv.config({ path: ROOT_ENV_PATH });
 
@@ -18,7 +19,7 @@ export const JWTCookieConfig = {
 };
 
 //FIXME: for invalid, maybe also redirect to logout
-const requireAuth = async (req, res, next) => {
+const requireAuth = asyncHandler(async (req, res, next) => {
   const accessToken = req.cookies.accessToken || null;
   const refreshToken = req.cookies.refreshToken || null;
 
@@ -77,7 +78,7 @@ const requireAuth = async (req, res, next) => {
 
   req.user = user;
   next();
-};
+});
 
 function deauth(res) {
   res.clearCookie("accessToken", {

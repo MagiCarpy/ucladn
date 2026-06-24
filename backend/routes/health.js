@@ -1,5 +1,6 @@
 import express from "express";
 import { sequelize } from "../config/db.js";
+import asyncHandler from "express-async-handler";
 const router = express.Router();
 
 /* 
@@ -9,17 +10,17 @@ Routes to check if connections to dependent systems, such as the database, are w
 */
 
 // Make sure server is alive lol
-router.get("/", async (req, res) => {
+router.get("/", asyncHandler(async (req, res) => {
   res.redirect("/api/health/server");
-});
+}));
 
-router.get("/server", async (req, res) => {
+router.get("/server", asyncHandler(async (req, res) => {
   res
     .status(200)
     .json({ ok: true, message: "Server is running", ts: Date.now() });
-});
+}));
 
-router.get("/db", async (req, res) => {
+router.get("/db", asyncHandler(async (req, res) => {
   try {
     await sequelize.authenticate();
     console.log("Database connection successful.");
@@ -29,11 +30,11 @@ router.get("/db", async (req, res) => {
 
     console.log("Models created and synchronized.");
 
-    return res.send("Database active and running.");
+    return res.status(200).send("Database active and running.");
   } catch (error) {
     console.error("Error connecting to database or syncing tables.", error);
-    return res.send("Database inactive and down.");
+    return res.status(503).send("Database inactive and down.");
   }
-});
+}));
 
 export default router;
