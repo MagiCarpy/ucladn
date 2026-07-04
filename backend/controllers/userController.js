@@ -84,7 +84,7 @@ const UserController = {
     const accessToken = createAccessToken(user.id);
     const refreshToken = createRefreshToken(user.id);
 
-    await redisClient.set(user.id, refreshToken, { EX: REFRESH_EXP_TIME });
+    await redisClient.set(`session:${user.id}`, refreshToken, { EX: REFRESH_EXP_TIME });
 
     res.cookie("accessToken", accessToken, {
       ...JWTCookieConfig,
@@ -104,7 +104,7 @@ const UserController = {
         req.cookies.refreshToken || null,
         process.env.REFRESH_TOKEN_SECRET
       );
-      await redisClient.del(decodedRefresh.userId);
+      await redisClient.del(`session:${decodedRefresh.userId}`);
     } catch (error) {
       console.error("No refresh token");
     }

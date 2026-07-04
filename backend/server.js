@@ -2,7 +2,12 @@ import express from "express";
 import path from "path";
 import { sequelize, createDatabaseIfNotExists } from "./config/db.js";
 import { connectRedis } from "./config/redisDb.js";
-import { ROOT_ENV_PATH, PUBLIC_PATH, UPLOADS_PATH } from "./config/paths.js";
+import {
+  ROOT_PATH,
+  ROOT_ENV_PATH,
+  PUBLIC_PATH,
+  UPLOADS_PATH,
+} from "./config/paths.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
@@ -64,10 +69,10 @@ app.use(
   // allows access to root and public folder contents
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'", "/"],
-      scriptSrc: ["'self'", "/"],
-      styleSrc: ["'self'", "/"],
-      imgSrc: ["'self'", "/", "data:"],
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "blob:", "https://*.openstreetmap.org", "https://unpkg.com"],
     },
   }),
 );

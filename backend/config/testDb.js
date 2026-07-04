@@ -5,10 +5,12 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: ROOT_ENV_PATH });
 
-const testSequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: ":memory:",
-  logging: false,
-});
+const testSequelize = process.env.NODE_ENV === "test"
+  ? new Sequelize({
+      dialect: "sqlite",
+      storage: ":memory:",
+      logging: false,
+    })
+  : null;
 
 export default testSequelize;

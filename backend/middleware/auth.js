@@ -47,7 +47,7 @@ const requireAuth = asyncHandler(async (req, res, next) => {
         process.env.REFRESH_TOKEN_SECRET
       );
 
-      const verifyRefreshToken = await redisClient.get(decodedRefresh.userId);
+      const verifyRefreshToken = await redisClient.get(`session:${decodedRefresh.userId}`);
 
       if (!verifyRefreshToken) return deauth(res);
 

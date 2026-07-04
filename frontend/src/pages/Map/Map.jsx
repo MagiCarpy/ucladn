@@ -1,6 +1,6 @@
 import L from "leaflet";
 import InfoPanel from "./InfoPanel/InfoPanel";
-import RequestMarker from "@/components/requestMarker";
+import RequestMarker from "@/components/RequestMarker";
 import RoutePolyline from "../../components/RoutePolyline";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { useAuth } from "../../context/AuthContext";
