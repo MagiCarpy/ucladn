@@ -36,35 +36,12 @@ UCLA specific, all-purpose delivery request service. Convenient for students tha
 
 ## Setup
 
+The easiest way to run the application locally is using Docker.
+
 ### Prerequisites
 
-- **Node.js** (v22 recommended)
-- **MySQL Server (or MariaDB)**
-
-  ```bash
-  sudo apt install mysql-server mysql-client
-  sudo systemctl start mysql
-  sudo systemctl enable mysql
-
-  # OR (same interface as MySQL)
-  sudo apt install mariadb-server mariadb-client -y
-  sudo systemctl start mariadb
-  sudo systemctl enable mariadb
-  ```
-
-  Config Database username, host, and password...
-
-  ```sql
-  ALTER USER 'username'@'host' IDENTIFIED BY 'password';
-  FLUSH PRIVILEGES;
-  ```
-
-- **Redis**
-
-  ```bash
-  sudo apt install redis-server
-  sudo systemctl start redis
-  ```
+- **Docker Desktop** (or Docker Engine + Docker Compose)
+- **Git**
 
 ### 1. Clone the Repo
 
@@ -73,51 +50,38 @@ git clone https://github.com/MagiCarpy/35L_Project.git
 cd 35L_Project
 ```
 
-### 2. Install Dependencies
+### 2. Environment Configuration
 
-Install dependencies for both the frontend and backend:
-
-```bash
-# Install backend dependencies
-cd backend
-npm install
-
-# Install frontend dependencies
-cd frontend
-npm install
-```
-
-### 3. Env Config
-
-Create a `.env` file in the **root** directory of the project (parent of `frontend` and `backend`). Use the following template:
-
-```env
-# Server Configuration
-PORT=5000
-
-# Database Configuration
-MYSQL_HOST=localhost
-MYSQL_USER=root
-MYSQL_PASS=pass
-MYSQL_DB=projDB
-MYSQL_PORT=3306
-
-# Security & APIs
-ACCESS_TOKEN_SECRET=SECRET_HERE
-REFRESH_TOKEN_SECRET=SECRET_HERE
-ORS_API_KEY=openrouteservice_api_key
-```
-
-> **Note**: You will need to register for a free API key at [OpenRouteService](https://openrouteservice.org/) and create a MySQL database named `projDB` (or whatever you specified in `MYSQL_DB`).
-
-### 4. Run the Application
-
-You can start both the backend server and the frontend development server from the root directory:
+Copy the example environment file and create your own `.env` in the root directory:
 
 ```bash
-# From the project root
+cp .env.example .env
+```
+
+_(You will need to register for a free API key at [OpenRouteService](https://openrouteservice.org/) and add it to your `.env` file)._
+
+### 3. Run the Application (Fully Dockerized)
+
+To spin up the entire application (Frontend, Backend API, MySQL, and Redis) in a single command, run:
+
+```bash
+docker compose up --build
+```
+
+- **Web App**: http://localhost:5000
+
+_Note: The frontend is statically built and served by the Express backend on port 5000 in this production-like environment._
+
+### 4. Local Development Workflow (Writing Code)
+
+If you want to edit code and see changes in real-time (Hot Reloading):
+
+```bash
+npm install
 npm run dev
 ```
+
+_(Behind the scenes, `npm run dev` automatically boots up your Docker databases in the background (`npm run predev`) before starting the frontend and backend servers!)_
 
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:5000

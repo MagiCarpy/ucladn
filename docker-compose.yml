@@ -1,0 +1,79 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    container_name: ucladn-app
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    volumes:
+      - app_uploads:/app/backend/uploads
+    environment:
+      MYSQL_HOST: db
+      REDIS_HOST: redis
+    depends_on:
+      - db
+      - redis
+    networks:
+      - ucladn_network
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4.0
+    container_name: ucladn-db
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASS}
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASS}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - ucladn_network
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    container_name: ucladn-redis
+    ports:
+      - "6379:6379"
+    command:
+      [
+        "redis-server",
+        "--user",
+        "default",
+        "off",
+        "nopass",
+        "-@all",
+        "--user",
+        "${REDIS_USER}",
+        "on",
+        ">${REDIS_PASS}",
+        "~session:*",
+        "-@all",
+        "+get",
+        "+set",
+        "+del",
+      ]
+    env_file:
+      - .env
+    volumes:
+      - redis_data:/data
+    networks:
+      - ucladn_network
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  redis_data:
+  app_uploads:
+
+networks:
+  ucladn_network:
+    driver: bridge

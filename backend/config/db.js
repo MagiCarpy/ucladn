@@ -28,7 +28,7 @@ export async function createDatabaseIfNotExists() {
   try {
     const [rows] = await connection.execute(
       `SELECT SCHEMA_NAME FROM information_schema.schemata WHERE SCHEMA_NAME = ?`,
-      [DB_NAME]
+      [DB_NAME],
     );
 
     if (rows.length <= 0) {
