@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   app:
-    build: .
+    image: ghcr.io/magicarpy/ucladn-app:deploy_test
     container_name: ucladn-app
     ports:
       - "5000:5000"

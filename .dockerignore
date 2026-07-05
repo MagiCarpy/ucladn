@@ -6,3 +6,14 @@ frontend/node_modules
 dist
 backend/dist
 frontend/dist
+
+# Infrastructure & Docs
+docker-compose.yml
+.github
+README.md
+Diagrams/
+todo/
+playwright-report/
+test-results/
+AWS_DEPLOYMENT.md
+STYLING_GUIDE.md
