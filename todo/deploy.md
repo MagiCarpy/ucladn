@@ -13,9 +13,10 @@ This document outlines the automated deployment pipeline for containerizing the 
 ## 2. GitHub Actions Setup
 
 In GitHub, go to your repository **Settings > Secrets and variables > Actions** and create these repository secrets:
-* `VPS_HOST`: The public IP address of your Hostinger VPS.
-* `VPS_USERNAME`: Your VPS login username (e.g., `root`).
-* `VPS_SSH_KEY`: The private SSH key granting access to your VPS.
+
+- `VPS_HOST`: The public IP address of your Hostinger VPS.
+- `VPS_USERNAME`: Your VPS login username (e.g., `root`).
+- `VPS_SSH_KEY`: The private SSH key granting access to your VPS.
 
 ---
 
@@ -24,7 +25,9 @@ In GitHub, go to your repository **Settings > Secrets and variables > Actions** 
 Before the CI/CD pipeline can work, you must prepare the Hostinger VPS once.
 
 ### Step A: Authenticate with GHCR
-Your private images require authentication to pull. 
+
+Your private images require authentication to pull.
+
 1. Create a **Personal Access Token (PAT)** in GitHub Developer Settings with the `read:packages` permission.
 2. SSH into your Hostinger server and run:
    ```bash
@@ -32,13 +35,16 @@ Your private images require authentication to pull.
    ```
 
 ### Step B: Set up `docker-compose.yml`
+
 Create a `docker-compose.yml` file on your Hostinger server. It must contain the 4 core services:
-* **`app`**: Points to `image: ghcr.io/magicarpy/ucladn-app:latest`
-* **`db`**: MySQL 8.4 container with persistent volumes (`db_data`)
-* **`redis`**: Redis Alpine container with persistent volumes (`redis_data`)
-* **`osrm-app`**: Open Source Routing Machine (OSRM) container for local routing (Requires a `.osm.pbf` map extract of UCLA/Westwood placed in a `map-data` folder).
+
+- **`app`**: Points to `image: ghcr.io/magicarpy/ucladn-app:latest`
+- **`db`**: MySQL 8.4 container with persistent volumes (`db_data`)
+- **`redis`**: Redis Alpine container with persistent volumes (`redis_data`)
+- **`osrm-app`**: Open Source Routing Machine (OSRM) container for local routing (Requires a `.osm.pbf` map extract of UCLA/Westwood placed in a `map-data` folder).
 
 ### Step C: Set up `.env`
+
 Create your `.env` file on the Hostinger server containing your production secrets (MySQL passwords, JWT secrets, etc.). The `.env` file is never pushed to GitHub.
 
 ---
@@ -87,8 +93,26 @@ jobs:
           script: |
             # Navigate to the folder containing docker-compose.yml
             cd /path/to/your/project
-            
+
             # Pull the newly pushed image and seamlessly reboot the containers
             docker compose pull
             docker compose up -d
 ```
+
+---
+
+## 5. Future: Reverse Proxy & HTTPS (Caddy)
+
+Currently, the app exposes port `5000` over plain HTTP. For production, you will need a Reverse Proxy to handle your domain name and provide a secure HTTPS padlock. We will use **Caddy**, which automatically provisions and renews Let's Encrypt SSL certificates with zero configuration.
+
+**When you purchase a domain name (e.g. `ucladn.com`), do the following:**
+
+1. Point your domain's A-Record to the Hostinger VPS IP address.
+2. Remove `ports: - "5000:5000"` from the `app` container in `docker-compose.yml` (so it cannot be accessed directly).
+3. Add a new `caddy` service to `docker-compose.yml` exposing ports `80` and `443`.
+4. Create a `Caddyfile` on the Hostinger server with two lines:
+   ```
+   ucladn.com
+   reverse_proxy app:5000
+   ```
+5. Run `docker compose up -d`. Caddy will instantly secure your domain with HTTPS and route traffic to your Node app!
