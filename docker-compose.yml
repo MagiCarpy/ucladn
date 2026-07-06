@@ -1,8 +1,6 @@
-version: "3.8"
-
 services:
   app:
-    image: ghcr.io/magicarpy/ucladn-app:deploy_test
+    image: ghcr.io/magicarpy/ucladn-app:latest
     container_name: ucladn-app
     ports:
       - "5000:5000"
@@ -14,8 +12,10 @@ services:
       MYSQL_HOST: db
       REDIS_HOST: redis
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - ucladn_network
     restart: unless-stopped
@@ -37,6 +37,10 @@ services:
     networks:
       - ucladn_network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   redis:
     image: redis:alpine

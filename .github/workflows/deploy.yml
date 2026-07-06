@@ -38,7 +38,7 @@ jobs:
             # Navigate to the folder containing docker-compose.yml
             # (Assuming you created the ucladn folder in the user's home directory)
             cd ~/ucladn
-            
+
             # Pull the newly pushed image and seamlessly reboot the containers
             docker compose pull
             docker compose up -d

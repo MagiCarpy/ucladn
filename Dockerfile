@@ -1,5 +1,6 @@
 # Build environment
 FROM node:20-bookworm-slim AS builder
+LABEL org.opencontainers.image.source="https://github.com/MagiCarpy/ucladn"
 WORKDIR /app
 
 COPY package*.json ./
