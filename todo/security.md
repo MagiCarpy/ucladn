@@ -77,3 +77,21 @@ This document serves as a centralized backlog of security enhancements and defen
 - **Remediation:**
   - Fuzz coordinates for all public request listings (e.g., in [requestController.js](file:///.../ucladn/backend/controllers/requestController.js) `list` method) by adding a randomized offset (e.g., 20–50 meters) if the status is `open`.
   - Expose the exact coordinates _only_ to the assigned helper after they have accepted the delivery.
+
+---
+
+## 4. Overall App Security & Checklists
+
+### [ ] **Application Security Verification Standard (OWASP ASVS)**
+
+- **Vulnerability:** Unstructured security approaches often miss critical software vulnerabilities (like Broken Access Control, Injection, XSS) during the coding phase.
+- **Remediation:** 
+  - Consult the **[OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/)** Level 1 checklist. It is the industry gold standard for web application code security.
+  - Implement automated SAST (Static Application Security Testing) tools like **GitHub Advanced Security**, **Snyk**, or **SonarQube** in the CI/CD pipeline to automatically scan code pushes for ASVS violations.
+
+### [ ] **Infrastructure Hardening (CIS Benchmarks)**
+
+- **Vulnerability:** Even secure code can be compromised if the underlying infrastructure (Ubuntu, Docker, MySQL, Redis) uses default passwords, open ports, or insecure configurations.
+- **Remediation:**
+  - Consult the **[CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks)** for MySQL 8.0, Ubuntu 24.04, and Docker.
+  - Use these prescriptive checklists to lock down the Hostinger VPS environment, disable root SSH logins, and restrict network interfaces.
