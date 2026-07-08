@@ -50,3 +50,11 @@ This document outlines recommended actions to clean up unnecessary files, elimin
 - [x] **Consistent Error Handling:**
   - Ensure all async Express routes are wrapped with `express-async-handler` (or equivalent try/catch blocks) and that the global error-handling middleware is used.
   - Never leak database connection strings or raw Sequelize stack traces in API error responses to clients.
+
+---
+
+## 5. Documentation Cleanup
+
+- [ ] **Transition Diagrams to Mermaid:**
+  - Convert all remaining hardcoded `.jpg` and `.png` diagrams in the `Diagrams/` folder (such as the ER Diagram, Login Flow, and Chat State diagrams) into native Mermaid markdown files.
+  - Update the `README.md` to link to or embed these new Mermaid diagrams for native rendering on GitHub.

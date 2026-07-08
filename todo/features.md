@@ -69,3 +69,7 @@ To make route recommendations most convenient for the deliverer, we can explore 
 *   **Partitioning/Sharding Chat Messages:** In a mature state, messages table queries grow exponentially. Archive messages to a separate history table immediately when a request is archived/completed, keeping the active `Messages` table extremely small and fast for both reads and writes.
 *   **Websocket Payload Minimization:** Optimize the size of objects transmitted via Socket.io. Instead of sending raw database model instances (which contain bloated meta-fields and unused attributes), serialize and send minimized, custom JSON payloads for `message:sent` and `request:updated` events.
 
+### **Self-Hosted Routing Infrastructure (OSRM)**
+*   **Transition from Public API to Local OSRM:** Replace the external OpenRouteService/OSRM API with a fully self-hosted OSRM (Open Source Routing Machine) Docker container running directly on the Hostinger VPS.
+*   **Custom Map & Pathways:** By self-hosting, implement a custom UCLA map dataset. This allows for the addition of custom pedestrian footpaths, shortcuts, and building entrances that don't exist on public OpenStreetMap data, creating highly accurate delivery routes.
+*   **Integration:** Add the `osrm-backend` Docker image to `docker-compose.yml`, mount the custom `.osm.pbf` map data via Docker volumes, and point the Node.js backend to `http://osrm:5000/route/v1/` over the internal Docker network.

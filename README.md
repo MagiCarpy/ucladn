@@ -93,3 +93,7 @@ _(Behind the scenes, `npm run dev` automatically boots up your Docker databases 
 ![alt text](https://github.com/MagiCarpy/35L_Project/blob/main/Diagrams/ChatStateDiagram.png?raw=true)
 ![alt text](https://github.com/MagiCarpy/35L_Project/blob/main/Diagrams/loginDiagram.jpg?raw=true)
 ![alt text](https://github.com/MagiCarpy/35L_Project/blob/main/Diagrams/ChatPollingSequenceDiagram.png?raw=true)
+
+### Production Architecture
+
+[View Production Architecture Diagram](./Diagrams/architecture.md)
