@@ -3,5 +3,6 @@
 test-results/
 playwright-report/
 node_modules/
+certs/
 backend/uploads/
 dump.rdb
