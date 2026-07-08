@@ -72,7 +72,14 @@ app.use(
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'"],
       styleSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "blob:", "https://*.openstreetmap.org", "https://unpkg.com"],
+      imgSrc: [
+        "'self'",
+        "data:",
+        "blob:",
+        "https://*.openstreetmap.org",
+        "https://unpkg.com",
+        "https://cdn-icons-png.flaticon.com"
+      ],
     },
   }),
 );
