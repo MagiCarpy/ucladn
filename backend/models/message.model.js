@@ -35,5 +35,6 @@ export const Message = sequelize.define(
     {
         tableName: "messages",
         timestamps: true,
+        paranoid: true,
     }
 );

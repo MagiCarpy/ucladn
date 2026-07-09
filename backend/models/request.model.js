@@ -69,5 +69,6 @@ export const Request = sequelize.define(
   {
     tableName: "requests",
     timestamps: true,
+    paranoid: true,
   }
 );

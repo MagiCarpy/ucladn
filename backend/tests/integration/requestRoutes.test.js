@@ -12,7 +12,6 @@ import crypto from "crypto";
 
 import { User } from "../../models/user.model.js";
 import { Request } from "../../models/request.model.js";
-import { ArchivedRequest } from "../../models/archivedRequest.model.js";
 
 // just giving ourselves two users to work with
 const uid1 = crypto.randomUUID();
@@ -225,8 +224,9 @@ describe("POST /api/requests/:id/confirm", () => {
       .set("Cookie", cookie);
 
     expect(res.status).toBe(200);
-    const archived = await ArchivedRequest.findOne();
+    const archived = await Request.findByPk(requestId, { paranoid: false });
     expect(archived).not.toBeNull();
+    expect(archived.deletedAt).not.toBeNull();
     const active = await Request.findByPk(requestId);
     expect(active).toBeNull();
   });
@@ -393,8 +393,9 @@ test("HTTP 200 — confirm received stores full archive", async () => {
 
   expect(res.status).toBe(200);
 
-  const archived = await ArchivedRequest.findOne({ where: { originalRequestId: reqid } });
+  const archived = await Request.findByPk(reqid, { paranoid: false });
   expect(archived).not.toBeNull();
+  expect(archived.deletedAt).not.toBeNull();
   expect(archived.item).toBe("Package");
   expect(archived.helperId).toBe(helperId);
 });

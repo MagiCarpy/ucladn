@@ -1,7 +1,6 @@
 import { Message } from "../models/message.model.js";
 import { Request } from "../models/request.model.js";
 import { User } from "../models/user.model.js";
-import { ArchivedRequest } from "../models/archivedRequest.model.js";
 import { PUBLIC_PATH, UPLOADS_PATH } from "../config/paths.js";
 import { validateImgFile } from "../middleware/imgFileValidator.js";
 import asyncHandler from "express-async-handler";
@@ -86,7 +85,7 @@ const MessageController = {
     const userId = req.user.id;
 
     // Verify user has access
-    const request = await Request.findByPk(requestId);
+    const request = await Request.findByPk(requestId, { paranoid: false });
     if (!request) {
       return res.status(404).json({ message: "Request not found" });
     }
@@ -99,7 +98,11 @@ const MessageController = {
 
     const messages = await Message.findAll({
       where: { requestId },
+      include: [
+        { model: User, as: "sender", attributes: ["id", "username"] },
+      ],
       order: [["createdAt", "ASC"]],
+      paranoid: false,
     });
 
     // Enrich messages with sender names (could be optimized with join)
@@ -134,14 +137,7 @@ const MessageController = {
     }
 
     // Find the request associated with the message
-    let request = await Request.findByPk(message.requestId);
-
-    if (!request) {
-      request = await ArchivedRequest.findOne({ where: { originalRequestId: message.requestId } });
-      if (!request) {
-        request = await ArchivedRequest.findByPk(message.requestId);
-      }
-    }
+    let request = await Request.findByPk(message.requestId, { paranoid: false });
 
     if (!request) {
       return res.sendFile(path.join(PUBLIC_PATH, "default.jpg"));

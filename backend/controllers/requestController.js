@@ -1,6 +1,5 @@
 import { Request } from "../models/request.model.js";
 import { Message } from "../models/message.model.js";
-import { ArchivedRequest } from "../models/archivedRequest.model.js";
 import { validateImgFile } from "../middleware/imgFileValidator.js";
 import { User } from "../models/user.model.js";
 import { PUBLIC_PATH, UPLOADS_PATH } from "../config/paths.js";
@@ -84,7 +83,7 @@ const RequestController = {
   // GET ONE
   getOne: asyncHandler(async (req, res) => {
     const id = req.params.id;
-    const reqData = await Request.findOne({ where: { id } });
+    const reqData = await Request.findOne({ where: { id }, paranoid: false });
 
     if (!reqData) return res.status(404).json({ message: "Request not found" });
 
@@ -198,14 +197,7 @@ const RequestController = {
     }
 
     const id = req.params.id;
-    let reqData = await Request.findByPk(id);
-
-    if (!reqData) {
-      reqData = await ArchivedRequest.findOne({ where: { originalRequestId: id } });
-      if (!reqData) {
-        reqData = await ArchivedRequest.findByPk(id);
-      }
-    }
+    let reqData = await Request.findByPk(id, { paranoid: false });
 
     if (!reqData) {
       return res.sendFile(path.join(PUBLIC_PATH, "default.jpg"));
@@ -325,27 +317,13 @@ const RequestController = {
     if (reqData.userId !== req.user.id)
       return res.status(403).json({ message: "Not your request." });
 
-    await ArchivedRequest.create({
-      originalRequestId: reqData.id,
-      userId: reqData.userId,
-      helperId: reqData.helperId,
-      item: reqData.item,
-      description: reqData.description,
-      pickupLocation: reqData.pickupLocation,
-      dropoffLocation: reqData.dropoffLocation,
-      pickupLat: reqData.pickupLat,
-      pickupLng: reqData.pickupLng,
-      dropoffLat: reqData.dropoffLat,
-      dropoffLng: reqData.dropoffLng,
-      status: "completed",
-      deliveryPhotoUrl: reqData.deliveryPhotoUrl,
-      receiverConfirmed: "received",
-      createdAt: reqData.createdAt,
-      updatedAt: new Date(),
-    });
+    reqData.status = "completed";
+    reqData.receiverConfirmed = "received";
+    await reqData.save();
+    // Delete associated messages so they aren't orphaned in the database
+    await Message.destroy({ where: { request_id: id } });
 
     await reqData.destroy();
-
     req.io.emit("request:deleted", { id });
 
     res.json({ message: "Request completed and archived" });
@@ -421,13 +399,15 @@ const RequestController = {
       order: [["createdAt", "DESC"]],
     });
 
-    const archivedAsRequester = await ArchivedRequest.findAll({
-      where: { userId },
+    const archivedAsRequester = await Request.findAll({
+      where: { userId, status: "completed" },
+      paranoid: false,
       order: [["createdAt", "DESC"]],
     });
 
-    const archivedAsCourier = await ArchivedRequest.findAll({
-      where: { helperId: userId },
+    const archivedAsCourier = await Request.findAll({
+      where: { helperId: userId, status: "completed" },
+      paranoid: false,
       order: [["createdAt", "DESC"]],
     });
 

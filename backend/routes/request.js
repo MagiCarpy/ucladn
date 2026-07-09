@@ -50,8 +50,8 @@ router.delete("/:id", requireAuth, RequestController.delete);
 
 router.post("/seed/archive", requireAuth, asyncHandler(async (req, res) => {
   try {
-    const { ArchivedRequest } = await import(
-      "../models/archivedRequest.model.js"
+    const { Request } = await import(
+      "../models/request.model.js"
     );
 
     const userId = req.user?.id;
@@ -67,23 +67,20 @@ router.post("/seed/archive", requireAuth, asyncHandler(async (req, res) => {
       date.setDate(date.getDate() - daysAgo);
 
       sample.push({
-        userId,
-        requesterId: 9999,
-        originalRequestId: uuidv4(),
-        userId,
+        id: uuidv4(),
+        userId: uuidv4(),
+        helperId: userId,
         item: "Potato",
         pickupLocation: "De Neve Plaza",
         dropoffLocation: "Rieber Hall",
         status: "completed",
-        asCourier: true,
-        asRequester: false,
-        archivedAt: date,
+        deletedAt: date,
         createdAt: date,
         updatedAt: date,
       });
     }
 
-    const results = await ArchivedRequest.bulkCreate(sample);
+    const results = await Request.bulkCreate(sample);
 
     res.json({
       message: "Seeded archived courier history!",
