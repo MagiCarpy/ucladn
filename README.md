@@ -74,26 +74,42 @@ _Note: The frontend is statically built and served by the Express backend on por
 
 ### 4. Local Development Workflow (Writing Code)
 
-If you want to edit code and see changes in real-time (Hot Reloading):
+To keep production secure, the raw database ports are hidden by default. If you want to edit code on your local machine and connect to the Docker databases, you must expose the ports locally first.
+
+Create a `docker-compose.override.yml` file in the root directory:
+```yaml
+services:
+  db:
+    ports:
+      - "3306:3306"
+  redis:
+    ports:
+      - "6379:6379"
+```
+*(Note: This file is in `.gitignore` and will not be pushed to production).*
+
+Then, start the dev servers (Hot Reloading enabled):
 
 ```bash
 npm install
 npm run dev
 ```
 
-_(Behind the scenes, `npm run dev` automatically boots up your Docker databases in the background (`npm run predev`) before starting the frontend and backend servers!)_
-
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:5000
 
 ## Diagrams
 
-![alt text](https://github.com/MagiCarpy/35L_Project/blob/main/Diagrams/ER_diagram.jpg?raw=true)
 ![alt text](https://github.com/MagiCarpy/35L_Project/blob/main/Diagrams/ReqDiagram.jpg?raw=true)
-![alt text](https://github.com/MagiCarpy/35L_Project/blob/main/Diagrams/ChatStateDiagram.png?raw=true)
-![alt text](https://github.com/MagiCarpy/35L_Project/blob/main/Diagrams/loginDiagram.jpg?raw=true)
-![alt text](https://github.com/MagiCarpy/35L_Project/blob/main/Diagrams/ChatPollingSequenceDiagram.png?raw=true)
 
-### Production Architecture
+[View Request & Chat State Lifecycle Diagram](./Diagrams/chat_state_diagram.md)
+
+[View MySQL Diagram](./Diagrams/er_diagram.md)
+
+[View Auth and Redis Session Caching Diagram](./Diagrams/redis_architecture.md)
+
+[View Real-Time Chat WebSocket Diagram](./Diagrams/chat_websocket_diagram.md)
+
+### Architecture & Databases
 
 [View Production Architecture Diagram](./Diagrams/architecture.md)

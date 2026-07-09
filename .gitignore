@@ -6,3 +6,4 @@ node_modules/
 certs/
 backend/uploads/
 dump.rdb
+docker-compose.override.yml
