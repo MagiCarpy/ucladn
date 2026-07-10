@@ -55,6 +55,6 @@ This document outlines recommended actions to clean up unnecessary files, elimin
 
 ## 5. Documentation Cleanup
 
-- [ ] **Transition Diagrams to Mermaid:**
+- [x] **Transition Diagrams to Mermaid:**
   - Convert all remaining hardcoded `.jpg` and `.png` diagrams in the `Diagrams/` folder (such as the ER Diagram, Login Flow, and Chat State diagrams) into native Mermaid markdown files.
   - Update the `README.md` to link to or embed these new Mermaid diagrams for native rendering on GitHub.
