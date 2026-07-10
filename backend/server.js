@@ -70,7 +70,8 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://static.cloudflareinsights.com"],
+      connectSrc: ["'self'", "https://cloudflareinsights.com"],
       styleSrc: ["'self'"],
       imgSrc: [
         "'self'",
