@@ -36,7 +36,7 @@ function InfoPanel({ request, clearSelection, currentUserHasActiveDelivery }) {
 
   // Derive display state directly from props since Map.jsx ensures they are fresh via sockets
   const uploadedPhoto = request?.deliveryPhotoUrl || null;
-  const receiverState = request?.receiverConfirmed || "pending";
+  const receiverState = request?.deliveryStatus || "pending";
 
   if (!request) {
     return (

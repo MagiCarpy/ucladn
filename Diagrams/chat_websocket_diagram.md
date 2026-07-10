@@ -1,6 +1,6 @@
 # Real-time WebSocket Chat Architecture
 
-This diagram visualizes how the application handles instant, real-time messaging using Socket.io, replacing the old, inefficient HTTP short-polling mechanism.
+This diagram visualizes how the application handles instant, real-time messaging using a hybrid approach: HTTP POST requests for sending messages (to support file uploads) and Socket.io global broadcasts for real-time delivery.
 
 ```mermaid
 sequenceDiagram
@@ -15,18 +15,19 @@ sequenceDiagram
     UserB->>API: HTTP GET /socket.io (Handshake)
     API-->>UserB: 101 Switching Protocols (Upgrade to WSS)
     
-    Note over UserA,UserB: 2. Joining Isolated Chat Rooms
-    UserA->>API: emit("join_room", { requestId: "123" })
-    UserB->>API: emit("join_room", { requestId: "123" })
+    Note over UserA,UserB: 2. Joining Chat Session
+    UserA->>API: emit("join_chat", "123")
+    UserB->>API: emit("join_chat", "123")
+    API-->>API: socket.join("123")
 
-    Note over UserA,UserB: 3. Real-time Message Delivery (Zero Polling)
-    UserA->>API: emit("send_message", { content: "I'm outside!" })
+    Note over UserA,UserB: 3. Hybrid Message Delivery (HTTP Send -> WSS Receive)
+    UserA->>API: HTTP POST /api/messages/123<br/>(content: "I'm outside!", attachment: file)
     
-    API->>MySQL: INSERT INTO Messages (content, sender_id, request_id)
+    API->>MySQL: INSERT INTO messages (content, attachment, sender_id, request_id)
     MySQL-->>API: Row Created
     
-    API->>UserB: broadcast.to("123").emit("receive_message", { content: "I'm outside!" })
-    UserB-->>UserB: React State Updates UI Instantly
+    API->>UserB: io.emit("message:sent", message_data)<br/>(Global Broadcast)
+    UserB-->>UserB: React filters by requestId and Updates UI
     
-    API-->>UserA: Acknowledgment Callback (Message Sent & Saved)
+    API-->>UserA: HTTP 201 Created (Message Sent & Saved)
 ```

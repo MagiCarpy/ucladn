@@ -288,7 +288,7 @@ const RequestController = {
     reqData.status = "open";
     reqData.helperId = null;
     reqData.deliveryPhotoUrl = null;
-    reqData.receiverConfirmed = "pending";
+    reqData.deliveryStatus = "pending";
 
     await reqData.save();
 
@@ -318,7 +318,7 @@ const RequestController = {
       return res.status(403).json({ message: "Not your request." });
 
     reqData.status = "completed";
-    reqData.receiverConfirmed = "received";
+    reqData.deliveryStatus = "received";
     await reqData.save();
     // Delete associated messages so they aren't orphaned in the database
     await Message.destroy({ where: { request_id: id } });
@@ -342,7 +342,7 @@ const RequestController = {
     reqData.status = "open";
     reqData.helperId = null;
     reqData.deliveryPhotoUrl = null;
-    reqData.receiverConfirmed = "pending";
+    reqData.deliveryStatus = "pending";
 
     await reqData.save();
 
@@ -415,7 +415,7 @@ const RequestController = {
     const completedRequests = archivedAsRequester;
 
     const received = archivedAsRequester.filter(
-      (req) => req.receiverConfirmed === "received"
+      (req) => req.deliveryStatus === "received"
     );
 
     // Compute simple weekly activity

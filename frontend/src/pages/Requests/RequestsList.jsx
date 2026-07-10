@@ -276,9 +276,9 @@ function RequestsList() {
           let statusLabel = req.status;
 
           if (req.status === "completed") {
-            if (req.receiverConfirmed === "received") {
+            if (req.deliveryStatus === "received") {
               statusLabel = "Completed — Received ✔";
-            } else if (req.receiverConfirmed === "not_received") {
+            } else if (req.deliveryStatus === "not_received") {
               statusLabel = "Completed — Not Received ✘";
             } else {
               statusLabel = "Completed — Awaiting Confirmation";
@@ -352,13 +352,13 @@ function RequestsList() {
                 )}
 
                 {/* Receiver confirmation badges */}
-                {req.receiverConfirmed === "received" && (
+                {req.deliveryStatus === "received" && (
                   <div className="mt-2 p-2 rounded bg-green-100 text-green-800 text-xs font-semibold w-fit">
                     Delivery Confirmed ✔
                   </div>
                 )}
 
-                {req.receiverConfirmed === "not_received" && (
+                {req.deliveryStatus === "not_received" && (
                   <div className="mt-2 p-2 rounded bg-red-100 text-red-800 text-xs font-semibold w-fit">
                     Delivery Marked as NOT Received ✘
                   </div>

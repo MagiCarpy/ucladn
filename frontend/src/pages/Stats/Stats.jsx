@@ -206,7 +206,7 @@ function renderRecentActivity(asRequester, asCourier) {
   asRequester.forEach((req) => {
     let txt = `Requested delivery from ${req.pickupLocation}`;
     if (req.status === "completed") txt += " — completed";
-    if (req.receiverConfirmed === "received") txt += " — marked received";
+    if (req.deliveryStatus === "received") txt += " — marked received";
 
     events.push({
       type: "request",
