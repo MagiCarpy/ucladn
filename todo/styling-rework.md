@@ -39,10 +39,12 @@ This document tracks the tasks for auditing the application's styling architectu
 
 ## 4. Responsive Design, Accessibility (a11y), and Appearance
 
-- [ ] **Verify Responsive Layouts:**
-  - Audit all core screens (Map, Dashboard, Chat, Request List, details panels) on mobile (under 400px), tablet, and desktop viewports to ensure clean stacking and scrolling behavior.
-- [ ] **Accessibility (a11y) & Contrast:**
-  - Check color contrast ratios (conforming to WCAG AA guidelines) across light and dark modes.
-  - Add missing ARIA labels, focus-visible outlines, and screen reader-friendly roles for interactive elements.
-- [ ] **Polish Interactive Transitions:**
-  - Implement subtle micro-animations (e.g., smooth hover transitions, scale-on-click for buttons, page fade-ins) to make the interface feel responsive and premium.
+- [ ] **Phase 1: Foundation (Current Priority)**
+  - **Responsive Grids:** Implement mobile-first layouts (`flex-col md:flex-row`) across the Map, Dashboard, Chat, and Requests List. Ensure seamless wrapping on iPhones (mobile) and tablet views.
+  - **Mobile Behaviors:** Ensure floating panels (like the Map InfoPanel) stack correctly or snap to the bottom on small screens so they don't block the UI.
+  - **Semantic HTML & Basic a11y:** Audit icon buttons (add `aria-label`), ensure proper `<button>` elements instead of clickable divs, and confirm keyboard tab-indexing focus states work.
+
+- [ ] **Phase 2: Final Polish & Animations (Postponed)**
+  - **Micro-Animations:** Add Framer Motion spring physics for hover states, button click-scales, and accordion menus.
+  - **Page Transitions:** Implement route-level fade-ins and skeleton loaders for all API boundaries.
+  - **WCAG Audit:** Perform a full formal contrast ratio audit across all light/dark theme variables for AA compliance.
