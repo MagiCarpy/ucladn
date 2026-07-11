@@ -190,7 +190,7 @@ function MapScreen() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row w-full h-[calc(90vh-3.5rem)] relative overflow-hidden p-2 md:p-4 gap-2 md:gap-4">
+    <div className="flex flex-col md:flex-row w-full h-full relative overflow-hidden p-2 md:p-4 gap-2 md:gap-4">
       {/* LEFT: MAP AREA */}
       <div className="flex-grow relative h-full rounded-lg overflow-hidden shadow-sm border border-border">
         {/* Top button (Show Routes) */}
