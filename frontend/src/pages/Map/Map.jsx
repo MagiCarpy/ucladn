@@ -315,6 +315,7 @@ function MapCore({
           stroke: false,
           fill: false,
         }}
+        spiderLegPolylineOptions={{ weight: 0, opacity: 0 }}
         showCoverageOnHover={false}
         iconCreateFunction={createClusterCustomIcon}
       >
