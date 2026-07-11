@@ -5,6 +5,7 @@ import L from "leaflet";
 const clickIcon = new L.Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
   iconSize: [28, 28],
+  iconAnchor: [14, 28],
 });
 
 function ClickHandler({ onPick }) {
@@ -42,7 +43,7 @@ export default function MinimapPicker({ value, onChange }) {
       <MapContainer
         center={[34.0699, -118.4465]} // Center on UCLA
         zoom={16}
-        className="h-full w-full"
+        className="h-full w-full !cursor-crosshair [&_*]:!cursor-crosshair"
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
