@@ -15,12 +15,13 @@ This document tracks the tasks for auditing the application's styling architectu
 
 ## 2. Research & Explore Modern, Clean UI Alternatives
 
-- [ ] **Aesthetics Audit (Current Design is "Too Cliche"):**
+- [x] **Aesthetics Audit (Current Design is "Too Cliche"):**
   - Review color schemes, fonts, cards, shadows, and interactive components.
   - Propose modern design updates (e.g., custom elegant dark/light palettes, subtle gradients, soft shadows, glassmorphism, or modern sans-serif typography like _Inter_ or _Outfit_).
-- [ ] **Explore Minimal UI Libraries:**
+  - Evaluate swapping `lucide-react` for `@remixicon/react` (or `@radix-ui/react-icons`) to match the new sharper, cleaner aesthetic (e.g., `--radius: 0.25rem`).
+- [x] **Explore Minimal UI Libraries:**
   - Explore whether to expand the use of Radix Primitives/Shadcn UI or evaluate lightweight, minimal components that align with a premium aesthetic.
-- [ ] **Low-Latency & High-Performance UX:**
+- [x] **Low-Latency & High-Performance UX:**
   - Prioritize lightweight, highly responsive, and low-latency styling choices to ensure instant user feedback, minimal runtime overhead, and a fast, buttery-smooth UX.
 
 ---

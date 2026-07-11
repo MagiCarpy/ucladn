@@ -8,7 +8,7 @@ import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useRoutesManager } from "../../hooks/useRoutesManager";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown, Scan } from "lucide-react";
+import { RiArrowDownSLine, RiFocus3Line } from "@remixicon/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSocket } from "../../context/SocketContext";
 import { createClusterCustomIcon } from "../../constants/clusterIcon.js";
@@ -193,7 +193,7 @@ function MapScreen() {
   return (
     <div className="flex flex-col md:flex-row w-full h-[calc(90vh-3.5rem)] relative overflow-hidden p-2 md:p-4 gap-2 md:gap-4">
       {/* LEFT: MAP AREA */}
-      <div className="flex-grow relative h-full rounded-xl overflow-hidden shadow-sm border border-border">
+      <div className="flex-grow relative h-full rounded-lg overflow-hidden shadow-sm border border-border">
         {/* Top button (Show Routes) */}
         <div className="absolute z-[1000] top-2.5 left-16 bg-card/90 backdrop-blur rounded-md border border-border shadow-sm">
           <div
@@ -201,7 +201,7 @@ function MapScreen() {
             className="relative w-8 h-8 cursor-pointer active:scale-90 transition-transform duration-75"
           >
             <Button className="relative w-full h-full dark:bg-card pointer-events-none">
-              <Scan />
+              <RiFocus3Line />
             </Button>
           </div>
         </div>
@@ -232,7 +232,7 @@ function MapScreen() {
               <span className="font-medium text-foreground dark:text-white text-xs">
                 Legend
               </span>
-              <ChevronDown
+              <RiArrowDownSLine
                 className={`w-4 h-4 transition-transform ${legendOpen ? "rotate-180" : ""
                   }`}
               />

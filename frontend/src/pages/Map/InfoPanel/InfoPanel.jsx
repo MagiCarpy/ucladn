@@ -40,7 +40,7 @@ function InfoPanel({ request, clearSelection, currentUserHasActiveDelivery }) {
 
   if (!request) {
     return (
-      <div className="w-full md:w-[300px] bg-muted/30 border border-border p-4 md:p-5 h-1/3 md:h-full flex flex-col justify-center items-center text-center text-muted-foreground rounded-xl">
+      <div className="w-full md:w-[300px] bg-muted/30 border border-border p-4 md:p-5 h-1/3 md:h-full flex flex-col justify-center items-center text-center text-muted-foreground rounded-lg">
         <h3 className="text-lg font-semibold mb-2">No request selected</h3>
         <p className="text-sm">Click a marker on the map to view details.</p>
       </div>
@@ -192,7 +192,7 @@ function InfoPanel({ request, clearSelection, currentUserHasActiveDelivery }) {
   };
 
   return (
-    <div className="w-full md:w-[300px] bg-card border border-border p-4 md:p-5 md:h-full overflow-y-auto text-card-foreground shadow-md rounded-xl z-20">
+    <div className="w-full md:w-[300px] bg-card border border-border p-4 md:p-5 md:h-full overflow-y-auto text-card-foreground shadow-md rounded-lg z-20">
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <h2 className="text-xl font-bold">{request.item}</h2>

@@ -9,6 +9,7 @@ import { useToast } from "@/context/toastContext";
 import { useEffect, useRef } from "react";
 import Minimap from "../../components/Minimap";
 import { useAuth } from "../../context/AuthContext";
+import { PageContainer } from "@/components/layout/PageContainer";
 
 function NewRequest() {
   const [item, setItem] = useState("");
@@ -98,7 +99,7 @@ function NewRequest() {
   }
 
   return (
-    <div className="flex justify-center w-full p-6">
+    <PageContainer className="flex justify-center">
       <Card className="w-full max-w-lg border-border shadow">
         <CardHeader>
           <CardTitle className="text-blue-700 dark:text-blue-300 text-2xl">
@@ -188,8 +189,8 @@ function NewRequest() {
           </form>
         </CardContent>
       </Card>
-    </div>
-  );
+      </PageContainer>
+    );
 }
 
 export default NewRequest;

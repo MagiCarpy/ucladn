@@ -3,14 +3,15 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchUserStats } from "@/api/stats";
 import {
-  Package,
-  PlusCircle,
-  Map,
-  User,
-  BarChart,
-  Quote,
-  AlertTriangle,
-} from "lucide-react";
+  RiBox1Line,
+  RiAddCircleLine,
+  RiMap2Line,
+  RiUserLine,
+  RiBarChartLine,
+  RiDoubleQuotesL,
+  RiAlertLine,
+} from "@remixicon/react";
+import { PageContainer } from "@/components/layout/PageContainer";
 import u1 from "@/assets/cover/ucla1.jpg";
 import u2 from "@/assets/cover/ucla2.jpg";
 import u3 from "@/assets/cover/ucla3.jpg";
@@ -82,7 +83,7 @@ function Cover() {
       {/* ========================================================= */}
       {/* LEFT-ALIGNED INTRO SECTION (balances the hero) */}
       {/* ========================================================= */}
-      <div className="w-full max-w-6xl px-8">
+      <PageContainer className="py-0">
         <h2 className="text-3xl font-bold text-foreground dark:text-white mb-6">
           Get Stuff Delivered. Help Other Bruins. Save Time.
         </h2>
@@ -91,7 +92,7 @@ function Cover() {
           or too tired to walk from Sproul to Rieber for the fifteenth time
           today — this is the fastest way to get what you need across campus.
         </p>
-      </div>
+      </PageContainer>
 
       {/* medium spacer */}
       <div className="h-24" />
@@ -99,11 +100,12 @@ function Cover() {
       {/* ========================================================= */}
       {/* ACTION GRID */}
       {/* ========================================================= */}
-      <div className="w-full max-w-6xl px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+      <PageContainer className="py-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
 
         <Link to="/requests/new">
-          <div className="p-8 rounded-xl border border-border shadow bg-card hover:shadow-lg transition">
-            <PlusCircle className="w-10 h-10 mb-4 text-blue-600" />
+          <div className="p-8 rounded-lg border border-border shadow bg-card hover:shadow-lg transition">
+            <RiAddCircleLine className="w-10 h-10 mb-4 text-blue-600" />
             <h3 className="font-semibold text-xl mb-2">Create a Request</h3>
             <p className="text-sm text-muted-foreground">
               Need food or an item delivered? Post what you need.
@@ -112,8 +114,8 @@ function Cover() {
         </Link>
 
         <Link to="/requests">
-          <div className="p-8 rounded-xl border border-border shadow bg-card hover:shadow-lg transition">
-            <Package className="w-10 h-10 mb-4 text-blue-600" />
+          <div className="p-8 rounded-lg border border-border shadow bg-card hover:shadow-lg transition">
+            <RiBox1Line className="w-10 h-10 mb-4 text-blue-600" />
             <h3 className="font-semibold text-xl mb-2">Browse Requests</h3>
             <p className="text-sm text-muted-foreground">
               View open deliveries and help fellow Bruins.
@@ -122,8 +124,8 @@ function Cover() {
         </Link>
 
         <Link to="/dashboard">
-          <div className="p-8 rounded-xl border border-border shadow bg-card hover:shadow-lg transition">
-            <Map className="w-10 h-10 mb-4 text-blue-600" />
+          <div className="p-8 rounded-lg border border-border shadow bg-card hover:shadow-lg transition">
+            <RiMap2Line className="w-10 h-10 mb-4 text-blue-600" />
             <h3 className="font-semibold text-xl mb-2">Open Map</h3>
             <p className="text-sm text-muted-foreground">
               Track pickup/delivery routes in real time.
@@ -132,8 +134,8 @@ function Cover() {
         </Link>
 
         <Link to="/profile">
-          <div className="p-8 rounded-xl border border-border shadow bg-card hover:shadow-lg transition">
-            <User className="w-10 h-10 mb-4 text-blue-600" />
+          <div className="p-8 rounded-lg border border-border shadow bg-card hover:shadow-lg transition">
+            <RiUserLine className="w-10 h-10 mb-4 text-blue-600" />
             <h3 className="font-semibold text-xl mb-2">Your Profile</h3>
             <p className="text-sm text-muted-foreground">
               Update your info, image, and details.
@@ -142,8 +144,8 @@ function Cover() {
         </Link>
 
         <Link to="/stats">
-            <div className="p-8 rounded-xl border border-border shadow bg-card hover:shadow-lg transition cursor-pointer">
-                <BarChart className="w-10 h-10 mb-4 text-blue-600" />
+            <div className="p-8 rounded-lg border border-border shadow bg-card hover:shadow-lg transition cursor-pointer">
+                <RiBarChartLine className="w-10 h-10 mb-4 text-blue-600" />
                 <h3 className="font-semibold text-xl mb-2">Your Stats</h3>
                 <p className="text-sm text-muted-foreground">
                     Deliveries completed: {userStats?.counts?.deliveriesCompleted ?? 0}
@@ -157,12 +159,13 @@ function Cover() {
 
 
       </div>
+      </PageContainer>
 
       {/* Spacer */}
       <div className="h-32" />
 
       {/* How it works */}
-      <div className="w-full max-w-6xl px-8">
+      <PageContainer className="py-0 text-center">
         <h2 className="text-3xl font-bold mb-10 text-foreground dark:text-white">
           How It Works
         </h2>
@@ -171,7 +174,7 @@ function Cover() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-14 text-center">
           <div>
-            <PlusCircle className="w-12 h-12 mx-auto text-blue-600" />
+            <RiAddCircleLine className="w-12 h-12 mx-auto text-blue-600" />
             <h3 className="mt-4 text-lg font-semibold">Post a Request</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               Describe what you need and where it should go.
@@ -179,7 +182,7 @@ function Cover() {
           </div>
 
           <div>
-            <Package className="w-12 h-12 mx-auto text-blue-600" />
+            <RiBox1Line className="w-12 h-12 mx-auto text-blue-600" />
             <h3 className="mt-4 text-lg font-semibold">Get Matched</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               A Bruin courier accepts and picks up your item.
@@ -187,14 +190,14 @@ function Cover() {
           </div>
 
           <div>
-            <Map className="w-12 h-12 mx-auto text-blue-600" />
+            <RiMap2Line className="w-12 h-12 mx-auto text-blue-600" />
             <h3 className="mt-4 text-lg font-semibold">Track Delivery</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               Follow real-time progress until it arrives.
             </p>
           </div>
         </div>
-      </div>
+      </PageContainer>
 
       {/* BIG SPACER */}
       <div className="h-32" />
@@ -202,7 +205,7 @@ function Cover() {
       {/* ========================================================= */}
       {/* HUMOROUS MULTI-AI WARNINGS (left-aligned, big spacing) */}
       {/* ========================================================= */}
-      <div className="w-full max-w-6xl px-8">
+      <PageContainer className="py-0">
         <h2 className="text-3xl font-bold mb-10 text-foreground dark:text-white">
           The People Love Us!
         </h2>
@@ -210,9 +213,9 @@ function Cover() {
         <div className="space-y-10">
 
           {/* ChatGPT */}
-          <div className="p-8 rounded-xl border border-border bg-card shadow">
+          <div className="p-8 rounded-lg border border-border bg-card shadow">
             <div className="flex items-center gap-3 mb-4">
-              <Quote className="text-yellow-500 w-6 h-6" />
+              <RiDoubleQuotesL className="text-yellow-500 w-6 h-6" />
               <h3 className="font-semibold text-xl">ChatGPT</h3>
             </div>
             <p className="text-muted-foreground leading-relaxed text-lg">
@@ -223,9 +226,9 @@ function Cover() {
           </div>
 
           {/* Claude */}
-          <div className="p-8 rounded-xl border border-border bg-card shadow">
+          <div className="p-8 rounded-lg border border-border bg-card shadow">
             <div className="flex items-center gap-3 mb-4">
-              <Quote className="text-yellow-500 w-6 h-6" />
+              <RiDoubleQuotesL className="text-yellow-500 w-6 h-6" />
               <h3 className="font-semibold text-xl">Claude</h3>
             </div>
             <p className="text-muted-foreground leading-relaxed text-lg">
@@ -238,9 +241,9 @@ function Cover() {
           </div>
 
           {/* Our Unpaid Software Intern */}
-          <div className="p-8 rounded-xl border border-border bg-card shadow">
+          <div className="p-8 rounded-lg border border-border bg-card shadow">
             <div className="flex items-center gap-3 mb-4">
-              <Quote className="text-yellow-500 w-6 h-6" />
+              <RiDoubleQuotesL className="text-yellow-500 w-6 h-6" />
               <h3 className="font-semibold text-xl">Our Unpaid Software Intern</h3>
             </div>
             <p className="text-muted-foreground leading-relaxed text-lg">
@@ -249,7 +252,7 @@ function Cover() {
             </p>
           </div>
         </div>
-      </div>
+      </PageContainer>
 
       {/* FOOTER */}
       <div className="mt-32 mb-10 text-xs text-muted-foreground">

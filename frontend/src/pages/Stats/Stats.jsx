@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { fetchUserStats } from "@/api/stats";
 import {
-  BarChart,
-  Package,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  Activity,
-} from "lucide-react";
+  RiBarChartLine,
+  RiBox1Line,
+  RiTimeLine,
+  RiCheckboxCircleLine,
+  RiCloseCircleLine,
+  RiPulseLine,
+} from "@remixicon/react";
+import { PageContainer } from "@/components/layout/PageContainer";
 import { Card } from "@/components/ui/card";
 
 export default function Stats() {
@@ -28,7 +29,7 @@ export default function Stats() {
   const { counts, asRequester, asCourier, chart } = stats;
 
   return (
-    <div className="w-full min-h-[calc(100vh-4rem)] px-6 py-10 flex flex-col items-center">
+    <PageContainer className="flex flex-col items-center">
       <h1 className="text-3xl font-bold mb-10 text-foreground dark:text-white">
         Your Activity Overview
       </h1>
@@ -36,25 +37,25 @@ export default function Stats() {
       {/* Stats card */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
         <StatCard
-          icon={<CheckCircle2 className="w-8 h-8 text-white-600" />}
+          icon={<RiCheckboxCircleLine className="w-8 h-8 text-white-600" />}
           title="Deliveries Completed"
           value={counts.deliveriesCompleted}
         />
 
         <StatCard
-          icon={<Package className="w-8 h-8 text-white-600" />}
+          icon={<RiBox1Line className="w-8 h-8 text-white-600" />}
           title="Requests Made"
           value={counts.requestsMade}
         />
 
         <StatCard
-          icon={<Clock className="w-8 h-8 text-white-600" />}
+          icon={<RiTimeLine className="w-8 h-8 text-white-600" />}
           title="Completed Requests"
           value={counts.requestsCompleted}
         />
 
         <StatCard
-          icon={<CheckCircle2 className="w-8 h-8 text-white-600" />}
+          icon={<RiCheckboxCircleLine className="w-8 h-8 text-white-600" />}
           title="Items Received"
           value={counts.requestsReceived}
         />
@@ -81,7 +82,7 @@ export default function Stats() {
           {renderRecentActivity(asRequester, asCourier)}
         </Card>
       </div>
-    </div>
+    </PageContainer>
   );
 }
 

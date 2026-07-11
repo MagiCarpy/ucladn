@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "../context/AuthContext";
-import { Smile, Paperclip, X, ArrowUp } from "lucide-react";
+import { RiEmotionLine, RiAttachment2, RiCloseLine, RiArrowUpLine } from "@remixicon/react";
 import { API_BASE_URL } from "@/config";
 import { useSocket } from "@/context/SocketContext";
 import SecureImage from "@/components/SecureImage";
@@ -166,7 +166,7 @@ const Chat = ({ requestId }) => {
             variant="default"
             onClick={() => fileInputRef.current?.click()}
           >
-            <Paperclip className="w-5 h-5" />
+            <RiAttachment2 className="w-5 h-5" />
           </Button>
 
           {selectedFile && (
@@ -179,7 +179,7 @@ const Chat = ({ requestId }) => {
                 variant="destructive"
                 onClick={() => setSelectedFile(null)}
               >
-                <X className="w-4 h-4" />
+                <RiCloseLine className="w-4 h-4" />
               </Button>
             </div>
           )}
@@ -189,7 +189,7 @@ const Chat = ({ requestId }) => {
             variant="default"
             onClick={() => setShowPicker((prev) => !prev)}
           >
-            <Smile className="w-4 h-4" />
+            <RiEmotionLine className="w-4 h-4" />
           </Button>
 
           {showPicker && (
@@ -212,7 +212,7 @@ const Chat = ({ requestId }) => {
           className="flex-1 px-3 py-2 rounded-md border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <Button type="submit" disabled={!newMessage.trim() && !selectedFile}>
-          <ArrowUp />
+          <RiArrowUpLine />
         </Button>
       </form>
     </div>

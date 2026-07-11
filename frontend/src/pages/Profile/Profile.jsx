@@ -4,7 +4,8 @@ import { useAuth } from "../../context/AuthContext";
 import { API_BASE_URL } from "@/config";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Mail, Hash } from "lucide-react";
+import { PageContainer } from "@/components/layout/PageContainer";
+import { RiUserLine, RiMailLine, RiHashtag } from "@remixicon/react";
 
 function Profile() {
   const { user, updateUser, authFetch } = useAuth();
@@ -61,7 +62,7 @@ function Profile() {
   };
 
   return (
-    <div className="flex justify-center px-4 py-10">
+    <PageContainer className="flex justify-center">
       <Card className="w-full max-w-xl shadow-xl border-border">
         <CardHeader className="pb-0 pt-6">
           <CardTitle className="text-center text-3xl font-bold text-blue-700 dark:text-blue-300">
@@ -105,21 +106,21 @@ function Profile() {
           {/* User Details */}
           <div className="space-y-4 text-sm">
             <div className="flex items-center gap-3">
-              <Hash className="w-5 h-5 text-blue-600 dark:text-blue-300" />
+              <RiHashtag className="w-5 h-5 text-blue-600 dark:text-blue-300" />
               <p className="text-lg">
                 <span className="font-semibold">User ID:</span> {user.userId}
               </p>
             </div>
 
             <div className="flex items-center gap-3">
-              <User className="w-5 h-5 text-blue-600 dark:text-blue-300" />
+              <RiUserLine className="w-5 h-5 text-blue-600 dark:text-blue-300" />
               <p className="text-lg">
                 <span className="font-semibold">Username:</span> {user.username}
               </p>
             </div>
 
             <div className="flex items-center gap-3">
-              <Mail className="w-5 h-5 text-blue-600 dark:text-blue-300" />
+              <RiMailLine className="w-5 h-5 text-blue-600 dark:text-blue-300" />
               <p className="text-lg">
                 <span className="font-semibold">Email:</span> {user.email}
               </p>
@@ -127,7 +128,7 @@ function Profile() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </PageContainer>
   );
 }
 

@@ -6,6 +6,7 @@ import { useToast } from "@/context/toastContext";
 import { useSocket } from "../../context/SocketContext";
 import Loading from "../Loading/Loading";
 import { API_BASE_URL } from "@/config";
+import { PageContainer } from "@/components/layout/PageContainer";
 
 function RequestsList() {
   const socket = useSocket();
@@ -142,7 +143,7 @@ function RequestsList() {
   if (loading) return <Loading />;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <PageContainer className="max-w-4xl">
       <div className="flex justify-between w-full">
         <h2 className="text-3xl font-bold mb-6 text-blue-700 dark:text-blue-300">
           Requests
@@ -414,7 +415,7 @@ function RequestsList() {
           );
         })
         .filter(Boolean)}
-    </div>
+    </PageContainer>
   );
 }
 

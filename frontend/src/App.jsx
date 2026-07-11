@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import {
-  Menu,
-  X,
-  Package,
-  PlusCircle,
-  HomeIcon,
-  User,
-  BarChart,
-} from "lucide-react";
+  RiMenuLine,
+  RiCloseLine,
+  RiBox1Line,
+  RiAddCircleLine,
+  RiHome4Line,
+  RiUserLine,
+  RiBarChartLine,
+} from "@remixicon/react";
 import { Button } from "@/components/ui/button";
 
 import Cover from "./pages/Cover/Cover";
@@ -62,31 +62,31 @@ function App() {
               <>
                 <Link to="/dashboard" className={isActive("/dashboard")}>
                   <div className="flex items-center gap-1">
-                    <HomeIcon className="w-4 h-4" /> Dashboard
+                    <RiHome4Line className="w-4 h-4" /> Dashboard
                   </div>
                 </Link>
 
                 <Link to="/requests" className={isActive("/requests")}>
                   <div className="flex items-center gap-1">
-                    <Package className="w-4 h-4" /> Requests
+                    <RiBox1Line className="w-4 h-4" /> Requests
                   </div>
                 </Link>
 
                 <Link to="/requests/new" className={isActive("/requests/new")}>
                   <div className="flex items-center gap-1">
-                    <PlusCircle className="w-4 h-4" /> New Request
+                    <RiAddCircleLine className="w-4 h-4" /> New Request
                   </div>
                 </Link>
 
                 <Link to="/stats" className={isActive("/stats")}>
                   <div className="flex items-center gap-1">
-                    <BarChart className="w-4 h-4" /> Stats
+                    <RiBarChartLine className="w-4 h-4" /> Stats
                   </div>
                 </Link>
 
                 <Link to="/profile" className={isActive("/profile")}>
                   <div className="flex items-center gap-1">
-                    <User className="w-4 h-4" /> Profile
+                    <RiUserLine className="w-4 h-4" /> Profile
                   </div>
                 </Link>
 
@@ -115,9 +115,9 @@ function App() {
             <ModeToggle />
             <Button variant="ghost" size="icon" onClick={toggleMenu}>
               {isMenuOpen ? (
-                <X className="h-6 w-6" />
+                <RiCloseLine className="h-6 w-6" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <RiMenuLine className="h-6 w-6" />
               )}
             </Button>
           </div>

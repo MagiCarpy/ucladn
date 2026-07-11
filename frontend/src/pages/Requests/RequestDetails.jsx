@@ -6,6 +6,7 @@ import { useToast } from "@/context/toastContext";
 import { useSocket } from "@/context/SocketContext";
 import Loading from "../../pages/Loading/Loading";
 import Chat from "../../components/Chat";
+import { PageContainer } from "@/components/layout/PageContainer";
 
 const RequestDetails = () => {
   const { id } = useParams();
@@ -81,7 +82,7 @@ const RequestDetails = () => {
     (user.userId === request.userId || user.userId === request.helperId);
 
   return (
-    <div className="container mx-auto p-4 max-w-2xl">
+    <PageContainer className="max-w-2xl">
       <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
         &larr; Back
       </Button>
@@ -120,7 +121,7 @@ const RequestDetails = () => {
           You must be the requester or the helper to view the chat.
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 };
 
