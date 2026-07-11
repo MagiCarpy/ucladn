@@ -123,3 +123,11 @@
     @apply bg-primary text-primary-foreground hover:bg-primary/90;
   }
 }
+
+/* Hide Leaflet spider legs for clusters */
+.leaflet-marker-icon.leaflet-marker-spider-leg,
+.leaflet-marker-shadow.leaflet-marker-spider-leg {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
