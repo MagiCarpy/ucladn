@@ -90,13 +90,12 @@ function Profile() {
               <input
                 type="file"
                 onChange={handleFileChange}
-                className="text-sm p-2 border border-input rounded-md bg-background hover:border-primary cursor-pointer"
+                className="cursor-pointer"
               />
 
               <Button
                 type="submit"
                 disabled={uploading}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white"
               >
                 {uploading ? "Uploading..." : "Upload"}
               </Button>

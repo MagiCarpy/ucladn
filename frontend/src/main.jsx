@@ -11,7 +11,7 @@ import { SocketProvider } from "./context/SocketContext";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <SocketProvider>
           <AuthProvider>
             <ToastProvider>

@@ -45,10 +45,15 @@ The application uses a custom UCLA-inspired color theme defined in `src/index.cs
 
 ```jsx
 // Button.jsx
-<button className="bg-primary text-primary-foreground px-5 py-2.5 rounded-md hover:bg-primary/90">
+import { Button } from "@/components/ui/button";
+
+<Button>
   Click Me
-</button>
+</Button>
 ```
+
+**⚠️ Warning on Ad-Hoc Styling:**
+Never attach massive strings of custom states like `className="px-4 py-2 border rounded-md focus:ring-blue-500"` on an `<input>` or raw `<button>`. All global elements are already styled via `index.css` or Shadcn components. Adding inline styling fights the global aesthetic and causes specificity conflicts.
 
 ## 3. Modifying the Theme
 
@@ -119,15 +124,27 @@ Use prefixes to apply styles only at certain breakpoints. The style applies to t
 </div>
 ```
 
-## 5. Arbitrary Values
+## 5. Arbitrary Values & Hardcoded Dimensions (Avoid When Possible)
 
-If you need a specific pixel value that isn't in the theme, use square brackets `[]`.
+While Tailwind allows arbitrary values like `w-[300px]`, **you should avoid this** because it breaks the standardized layout grid and can cause overlap/responsive issues. 
 
+Instead, find the closest standard Tailwind spacing token:
+
+**❌ Avoid:**
 ```jsx
-<div className="w-[350px] top-[15%] z-[100]">
-  Specific width and positioning
+<div className="w-[300px]">
+  Breaks responsive grids
 </div>
 ```
+
+**✅ Do:**
+```jsx
+<div className="w-72 md:w-80">
+  Uses standard 4px scaling grid
+</div>
+```
+
+Only use arbitrary brackets `[]` for extremely specific positioning (e.g., `top-[15%] z-[1000]`) or third-party integrations.
 
 ## 6. Conditional Styling (`cn` helper)
 

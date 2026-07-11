@@ -1,6 +1,7 @@
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { Button } from "@/components/ui/button";
 
 const clickIcon = new L.Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
@@ -31,13 +32,15 @@ export default function MinimapPicker({ value, onChange }) {
 
       {/* Clear selection button */}
       {value && (
-        <button
-          className="absolute top-2 right-2 z-[500] bg-white dark:bg-card px-2 py-1 rounded text-xs shadow border hover:bg-gray-100 dark:hover:bg-card/80"
+        <Button
+          variant="outline"
+          size="sm"
+          className="absolute top-2 right-2 z-[500] h-7 px-2 text-xs shadow"
           onClick={() => onChange(null)}
           type="button"
         >
           Clear
-        </button>
+        </Button>
       )}
 
       <MapContainer

@@ -219,6 +219,7 @@ function MapScreen() {
         <div className="absolute top-2.5 right-2.5 z-[1000]">
           <div className="w-44 overflow-hidden rounded-lg border border-border shadow-sm bg-white dark:bg-card">
             {/* Legend header */}
+
             <button
               onClick={() => setLegendOpen((prev) => !prev)}
               className="

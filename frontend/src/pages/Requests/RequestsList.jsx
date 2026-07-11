@@ -196,13 +196,13 @@ function RequestsList() {
               placeholder="Search by user..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 px-4 py-2.5 text-sm min-w-40 max-w-80 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="flex-1 min-w-40 max-w-80"
             />
 
             <select
               value={filterBy}
               onChange={(e) => setFilterBy(e.target.value)}
-              className="px-4 py-2.5 text-sm font-medium rounded-lg min-w-40 max-w-80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="min-w-40 max-w-80"
             >
               <option value="all">All Distances</option>
               <option value="50">Less than 50 meters</option>
