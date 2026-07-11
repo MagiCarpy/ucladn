@@ -10,4 +10,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "react-router-dom"],
+          map: ["leaflet", "react-leaflet", "react-leaflet-cluster"],
+          ui: ["framer-motion", "@remixicon/react", "emoji-picker-react"],
+        },
+      },
+    },
+  },
 });
