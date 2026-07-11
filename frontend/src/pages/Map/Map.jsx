@@ -400,7 +400,11 @@ function MapBehavior({ routes, requests, selected, loading }) {
 
     const route = routes.find((r) => r.id === selected.id);
     if (route && route.polyline) {
-      map.fitBounds(route.polyline, { padding: [50, 50] });
+      // Wait for React to mount the InfoPanel and Flexbox to resize the map container
+      setTimeout(() => {
+        map.invalidateSize();
+        map.fitBounds(route.polyline, { padding: [50, 50] });
+      }, 100);
     }
   }, [selected, routes, map]);
 
