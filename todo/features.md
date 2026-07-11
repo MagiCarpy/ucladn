@@ -15,6 +15,7 @@ This document outlines upcoming feature suggestions, convenience routing brainst
 - [ ] **Order History:** Create a dedicated history tab showing completed requests, total distance traveled, and delivery history. Show couriers their performance metrics (average completion speed, active weeks).
 - [ ] **Uncluttered Display:** Transition to a simplified, high-contrast interface showing only vital stats. Add contextual collapsible panels that show detail sheets only when markers are clicked.
 - [ ] **SQL Index Optimization:** Add composite indexes for frequently filtered queries (e.g., `helper_id` + `status`) and explicitly index foreign keys to ensure $O(1)$ lookup times.
+- [ ] **Interactive Chat Notifications:** Add a "Jump to Bottom" floating pill for unread messages, a red divider line separating new vs old messages in the chat feed, and out-of-chat toast notifications for incoming messages while navigating the map.
 - [ ] **Websocket Payload Minimization:** Optimize Socket.io transmissions by serializing and sending minimized, custom JSON payloads instead of bloated raw database model instances.
 
 ### Medium (Logic Updates & API Integrations)
