@@ -72,14 +72,14 @@ app.use(
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "https://static.cloudflareinsights.com"],
       connectSrc: ["'self'", "https://cloudflareinsights.com"],
-      styleSrc: ["'self'"],
+      styleSrc: ["'self'", "https://fonts.googleapis.com"],
       imgSrc: [
         "'self'",
         "data:",
         "blob:",
         "https://*.openstreetmap.org",
         "https://unpkg.com",
-        "https://cdn-icons-png.flaticon.com"
+        "https://cdn-icons-png.flaticon.com",
       ],
     },
   }),
