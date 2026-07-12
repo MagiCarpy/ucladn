@@ -50,7 +50,7 @@ function NewRequest() {
     // Pick up
     if (pickupKey === "custom") {
       if (!customPickup)
-        return alert("Please click a pickup point on the map.");
+        return showToast("Please click a pickup point on the map.", "error");
       pickupData = {
         label: "Custom Pickup",
         lat: customPickup.lat,
@@ -63,7 +63,7 @@ function NewRequest() {
     // Drop off
     if (dropoffKey === "custom") {
       if (!customDropoff)
-        return alert("Please click a dropoff point on the map.");
+        return showToast("Please click a dropoff point on the map.", "error");
       dropoffData = {
         label: "Custom Dropoff",
         lat: customDropoff.lat,
@@ -116,6 +116,7 @@ function NewRequest() {
                 maxLength={50}
                 onChange={(e) => setItem(e.target.value)}
                 required
+                className="py-6 text-md"
               />
             </div>
 
@@ -130,7 +131,7 @@ function NewRequest() {
                 value={description}
                 maxLength={150}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full border border-input rounded-md p-2 min-h-[80px] resize-y"
+                className="w-full border border-input rounded-md p-3 min-h-[100px] resize-y bg-background text-md"
                 placeholder="Add details about your request..."
               />
             </div>
@@ -140,7 +141,7 @@ function NewRequest() {
               <select
                 value={pickupKey}
                 onChange={(e) => setPickupKey(e.target.value)}
-                className="w-full border border-input rounded-md p-2"
+                className="w-full border border-input rounded-md p-3 bg-background text-md h-12"
                 required
               >
                 <option value="" disabled selected></option>
@@ -164,7 +165,7 @@ function NewRequest() {
               <select
                 value={dropoffKey}
                 onChange={(e) => setDropoffKey(e.target.value)}
-                className="w-full border border-input rounded-md p-2"
+                className="w-full border border-input rounded-md p-3 bg-background text-md h-12"
                 required
               >
                 <option value="" disabled selected></option>
@@ -183,7 +184,7 @@ function NewRequest() {
               </div>
             )}
 
-            <Button type="submit" className="w-full" disabled={submitting}>
+            <Button type="submit" className="w-full h-14 text-lg mt-4" disabled={submitting}>
               {submitting ? "Creating..." : "Create Request"}
             </Button>
           </form>

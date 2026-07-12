@@ -188,42 +188,39 @@ function RequestsList() {
 
       {/* FILTER SECTION */}
       <div className="mb-8 flex flex-col gap-4">
-        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full">
-          {/* Search Bar */}
-          <div className="flex flex-wrap items-start w-full gap-3">
-            <input
-              type="text"
-              placeholder="Search by user..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 min-w-40 max-w-80"
-            />
+        <div className="flex flex-col md:flex-row gap-3 w-full">
+          <input
+            type="text"
+            placeholder="Search by user..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="flex-1 w-full"
+          />
 
-            <select
-              value={filterBy}
-              onChange={(e) => setFilterBy(e.target.value)}
-              className="min-w-40 max-w-80"
-            >
-              <option value="all">All Distances</option>
-              <option value="50">Less than 50 meters</option>
-              <option value="100">Less than 100 meters</option>
-              <option value="200">Less than 200 meters</option>
-              <option value="300">Less than 300 meters</option>
-              <option value="500">Less than 500 meters</option>
-              <option value="700">Less than 700 meters</option>
-              <option value="1000">Less than 1000 meters</option>
-              <option value="1500">Less than 1500 meters</option>
-              <option value="1500+">1500+ meters</option>
-            </select>
+          <select
+            value={filterBy}
+            onChange={(e) => setFilterBy(e.target.value)}
+            className="flex-1 w-full"
+          >
+            <option value="all">All Distances</option>
+            <option value="50">Less than 50 meters</option>
+            <option value="100">Less than 100 meters</option>
+            <option value="200">Less than 200 meters</option>
+            <option value="300">Less than 300 meters</option>
+            <option value="500">Less than 500 meters</option>
+            <option value="700">Less than 700 meters</option>
+            <option value="1000">Less than 1000 meters</option>
+            <option value="1500">Less than 1500 meters</option>
+            <option value="1500+">1500+ meters</option>
+          </select>
 
-            <Button
-              onClick={handleApplyFilter}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 whitespace-nowrap"
-              disabled={filterBy === appliedFilter}
-            >
-              Apply Filter
-            </Button>
-          </div>
+          <Button
+            onClick={handleApplyFilter}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium w-full md:w-auto px-6"
+            disabled={filterBy === appliedFilter}
+          >
+            Apply Filter
+          </Button>
         </div>
 
         {appliedFilter !== "all" && (
@@ -289,13 +286,13 @@ function RequestsList() {
           return (
             <div
               key={req.id}
-              className="border border-border p-5 mb-4 rounded-lg shadow-sm bg-card text-card-foreground hover:shadow-md transition-shadow"
+              className="border border-border p-5 mb-4 rounded-lg shadow-sm bg-card text-card-foreground hover:shadow-md transition-shadow overflow-hidden w-full"
             >
-              <div className="flex justify-between items-start mb-2 gap-4">
-                <h3 className="font-bold text-2xl text-shadow-outline break-words min-w-0">
+              <div className="flex flex-col md:flex-row justify-between items-start mb-2 gap-4">
+                <h3 className="font-bold text-2xl text-shadow-outline break-words min-w-0 flex-1">
                   {req.item}
                 </h3>
-                <div className="flex flex-col items-end gap-1">
+                <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2 w-full md:w-auto shrink-0">
                   {user &&
                     req.userId !== user.userId &&
                     req.status === "open" && (
@@ -320,7 +317,7 @@ function RequestsList() {
 
               {/* DESCRIPTION */}
               {req.description && (
-                <p className="text-xs text-muted-foreground mb-3 break-words">
+                <p className="text-sm text-muted-foreground mb-4 break-words">
                   <strong className="">Description:</strong>{" "}
                   <em> {req.description} </em>
                 </p>
@@ -367,9 +364,9 @@ function RequestsList() {
               </div>
 
               {/* ACTION BUTTONS */}
-              <div className="flex justify-between items-end w-full py-2">
-                <div className="flex flex-row flex-wrap gap-2">
-                  <Button onClick={() => handleViewRoute(req)}>
+              <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center w-full mt-4 pt-4 border-t border-border gap-4">
+                <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                  <Button onClick={() => handleViewRoute(req)} className="w-full md:w-auto">
                     View Route
                   </Button>
                   {user &&
@@ -378,6 +375,7 @@ function RequestsList() {
                       <Button
                         variant="secondary"
                         onClick={() => navigate(`/requests/${req.id}`)}
+                        className="w-full md:w-auto"
                       >
                         Chat
                       </Button>
@@ -388,16 +386,17 @@ function RequestsList() {
                 {user &&
                 req.userId === user.userId &&
                 req.status === "completed" ? (
-                  <div className="flex flex-row flex-wrap gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                     <Button
                       onClick={() => confirmReceived(req)}
-                      className="bg-green-600 hover:bg-green-700 text-white"
+                      className="bg-green-600 hover:bg-green-700 text-white w-full md:w-auto"
                     >
                       Received
                     </Button>
                     <Button
                       onClick={() => confirmNotReceived(req)}
                       variant="destructive"
+                      className="w-full md:w-auto"
                     >
                       Not Received
                     </Button>
@@ -405,9 +404,11 @@ function RequestsList() {
                 ) : (
                   user &&
                   dist !== null && (
-                    <span className="text-xs text-grey-500 whitespace-nowrap">
-                      <b>Distance:</b> ~{Math.round(dist)} m
-                    </span>
+                    <div className="flex justify-center md:justify-end w-full md:w-auto">
+                      <span className="text-sm font-semibold text-foreground bg-muted px-3 py-1.5 rounded-full whitespace-nowrap">
+                        ~{Math.round(dist)} meters away
+                      </span>
+                    </div>
                   )
                 )}
               </div>
