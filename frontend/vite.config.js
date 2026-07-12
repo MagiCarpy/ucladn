@@ -16,7 +16,7 @@ export default defineConfig({
         manualChunks: {
           vendor: ["react", "react-dom", "react-router-dom"],
           map: ["leaflet", "react-leaflet", "react-leaflet-cluster"],
-          ui: ["framer-motion", "@remixicon/react", "emoji-picker-react"],
+          ui: ["framer-motion", "@remixicon/react"],
         },
       },
     },
