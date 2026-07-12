@@ -289,7 +289,7 @@ function RequestsList() {
               className="border border-border p-5 mb-4 rounded-lg shadow-sm bg-card text-card-foreground hover:shadow-md transition-shadow overflow-hidden w-full"
             >
               <div className="flex flex-col md:flex-row justify-between items-start mb-2 gap-4">
-                <h3 className="font-bold text-2xl text-shadow-outline break-words min-w-0 flex-1">
+                <h3 className="font-bold text-2xl break-words min-w-0 flex-1">
                   {req.item}
                 </h3>
                 <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2 w-full md:w-auto shrink-0">

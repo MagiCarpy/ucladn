@@ -37,25 +37,25 @@ export default function Stats() {
       {/* Stats card */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
         <StatCard
-          icon={<RiCheckboxCircleLine className="w-8 h-8 text-white-600" />}
+          icon={<RiCheckboxCircleLine className="w-8 h-8 text-muted-foreground" />}
           title="Deliveries Completed"
           value={counts.deliveriesCompleted}
         />
 
         <StatCard
-          icon={<RiBox1Line className="w-8 h-8 text-white-600" />}
+          icon={<RiBox1Line className="w-8 h-8 text-muted-foreground" />}
           title="Requests Made"
           value={counts.requestsMade}
         />
 
         <StatCard
-          icon={<RiTimeLine className="w-8 h-8 text-white-600" />}
+          icon={<RiTimeLine className="w-8 h-8 text-muted-foreground" />}
           title="Completed Requests"
           value={counts.requestsCompleted}
         />
 
         <StatCard
-          icon={<RiCheckboxCircleLine className="w-8 h-8 text-white-600" />}
+          icon={<RiCheckboxCircleLine className="w-8 h-8 text-muted-foreground" />}
           title="Items Received"
           value={counts.requestsReceived}
         />

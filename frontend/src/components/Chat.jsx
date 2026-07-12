@@ -134,7 +134,7 @@ const Chat = ({ requestId }) => {
                         className="mb-2 rounded-md max-w-full max-h-60 object-cover"
                       />
                     )}
-                    <p className="text-sm break-words overflow-wrap-anywhere whitespace-pre-wrap">
+                    <p className="text-sm break-words whitespace-pre-wrap">
                       {msg.content}
                     </p>
                   </div>
