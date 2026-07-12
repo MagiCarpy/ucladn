@@ -66,9 +66,9 @@
     --popover: 216 72% 16%;
     --popover-foreground: 0 0% 100%;
 
-    /* Primary: #2D68C4 (Darker Blue) */
-    --primary: 216 63% 30%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary: High Contrast Vibrant Blue */
+    --primary: 217 90% 65%;
+    --primary-foreground: 0 0% 10%;
 
     /* Secondary: #F2A900 */
     --secondary: 42 87% 47%;
@@ -86,7 +86,7 @@
 
     --border: 216 50% 20%;
     --input: 216 50% 20%;
-    --ring: 217 66% 54%;
+    --ring: 217 90% 65%;
 
     --chart-1: 217 66% 54%;
     --chart-2: 42 87% 47%;
@@ -124,3 +124,57 @@
   }
 }
 
+/* Custom Slim Scrollbar */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(
+    156,
+    163,
+    175,
+    0.3
+  ); /* muted-foreground approximation */
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.2);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.4);
+}
+
+/* Leaflet UI Inset Alignment (Matches Tailwind's top-6 / left-6 which is 1.5rem or 24px) */
+/* Leaflet naturally adds 10px margin to controls, so we shift the container by 14px to get exactly 24px */
+.leaflet-left {
+  left: calc(1.5rem - 10px) !important;
+}
+.leaflet-bottom {
+  bottom: calc(1.5rem - 10px) !important;
+}
+.leaflet-right {
+  right: calc(1.5rem - 10px) !important;
+}
+.leaflet-top {
+  top: calc(1.5rem - 10px) !important;
+}
+
+/* Horizontal stacking for bottom-left controls (Zoom + Scale) */
+.leaflet-bottom.leaflet-left {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-end !important;
+  gap: 12px !important;
+}
+.leaflet-bottom.leaflet-left .leaflet-control {
+  margin-bottom: 10px !important; /* Restore standard bottom margin inside the flex container to offset the calc(-10px) from above */
+  margin-left: 10px !important;
+}

@@ -5,8 +5,24 @@ import { useToast } from "@/context/toastContext";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "@/config";
 import SecureImage from "@/components/SecureImage";
-
-function InfoPanel({ request, clearSelection, currentUserHasActiveDelivery }) {
+import { motion } from "framer-motion";
+import {
+  RiAddLine,
+  RiSubtractLine,
+  RiMapPinLine,
+  RiCloseLine,
+  RiArrowRightSLine,
+  RiArrowLeftSLine,
+  RiArrowDownSLine,
+  RiArrowUpSLine,
+} from "@remixicon/react";
+function InfoPanel({
+  request,
+  clearSelection,
+  currentUserHasActiveDelivery,
+  isMinimized,
+  setIsMinimized,
+}) {
   const { user, authFetch } = useAuth();
   const { showToast } = useToast();
   const [uploading, setUploading] = useState(false);
@@ -14,7 +30,29 @@ function InfoPanel({ request, clearSelection, currentUserHasActiveDelivery }) {
   const [localPreviewUrl, setLocalPreviewUrl] = useState(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
 
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleDragEnd = (event, info) => {
+    if (isDesktop) {
+      if (isMinimized) {
+        if (info.offset.x < -50 || info.velocity.x < -500) setIsMinimized(false);
+      } else {
+        if (info.offset.x > 50 || info.velocity.x > 500) setIsMinimized(true);
+      }
+    } else {
+      if (isMinimized) {
+        if (info.offset.y < -50 || info.velocity.y < -500) setIsMinimized(false);
+      } else {
+        if (info.offset.y > 50 || info.velocity.y > 500) setIsMinimized(true);
+      }
+    }
+  };
   useEffect(() => {
     return () => {
       if (localPreviewUrl) {
@@ -39,12 +77,7 @@ function InfoPanel({ request, clearSelection, currentUserHasActiveDelivery }) {
   const receiverState = request?.deliveryStatus || "pending";
 
   if (!request) {
-    return (
-      <div className="w-full md:w-80 bg-muted/30 border border-border p-4 md:p-5 h-1/3 md:h-full flex flex-col justify-center items-center text-center text-muted-foreground rounded-lg">
-        <h3 className="text-lg font-semibold mb-2">No request selected</h3>
-        <p className="text-sm">Click a marker on the map to view details.</p>
-      </div>
-    );
+    return null;
   }
 
   const deleteRequest = async () => {
@@ -191,17 +224,63 @@ function InfoPanel({ request, clearSelection, currentUserHasActiveDelivery }) {
     setLocalPreviewUrl(URL.createObjectURL(file));
   };
 
+  const desktopMaxX = 352; // 384px (w-96) - 32px (visible tab)
+  const mobileMaxY = (window.innerHeight * 0.45) - 64; // 45vh - 64px
+
   return (
-    <div className="w-full md:w-80 bg-card border border-border p-4 md:p-5 md:h-full overflow-y-auto text-card-foreground shadow-md rounded-lg z-20">
-      {/* Header */}
-      <div className="flex justify-between items-start mb-4">
-        <h2 className="text-xl font-bold">{request.item}</h2>
-        <Button size="icon" onClick={clearSelection} className="h-8 w-8">
-          <span className="text-lg">×</span>
-        </Button>
+    <motion.div
+      initial={isDesktop ? { x: desktopMaxX } : { y: mobileMaxY }}
+      animate={
+        isDesktop
+          ? { x: isMinimized ? desktopMaxX : 0, y: 0 }
+          : { y: isMinimized ? mobileMaxY : 0, x: 0 }
+      }
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      drag={isDesktop ? "x" : "y"}
+      dragConstraints={
+        isDesktop ? { left: 0, right: desktopMaxX } : { top: 0, bottom: mobileMaxY }
+      }
+      dragElastic={0.2}
+      onDragEnd={handleDragEnd}
+      className="absolute z-[1000] bottom-0 left-0 w-full md:bottom-auto md:left-auto md:top-0 md:right-0 md:w-96 bg-card/95 backdrop-blur-md border border-border md:border-r-0 md:border-y-0 p-4 md:pl-10 h-[45vh] md:h-full text-card-foreground shadow-2xl rounded-t-md md:rounded-t-none md:rounded-l-md md:rounded-r-none touch-none flex flex-col overflow-hidden"
+    >
+      {/* iOS-style Drag Handle Indicator */}
+      <div 
+        className="absolute top-2 left-0 right-0 mx-auto w-12 h-1.5 rounded-full bg-foreground/20 cursor-pointer hover:bg-foreground/30 transition-colors md:top-0 md:bottom-0 md:left-3 md:right-auto md:my-auto md:w-1.5 md:h-12 z-[1010]"
+        onClick={() => setIsMinimized((prev) => !prev)}
+        aria-label="Toggle drawer"
+      />
+
+      {/* Header / Drag Handle */}
+      <div 
+        className="flex justify-between items-center shrink-0 cursor-pointer md:cursor-auto mt-2 md:mt-0"
+        onClick={() => {
+           if (isMinimized) setIsMinimized(false);
+        }}
+      >
+        <div className="flex items-center gap-3 overflow-hidden">
+          <h2 className="font-bold pr-2 truncate text-xl">
+            {request.item}
+          </h2>
+        </div>
+
+        {!isMinimized && (
+          <div className="flex gap-2 shrink-0">
+            <div
+              onClick={clearSelection}
+              className="text-red-500 hover:text-red-600 transition-colors p-1 cursor-pointer"
+              aria-label="Close request details"
+              role="button"
+            >
+              <RiCloseLine className="w-6 h-6" />
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Accepted-by-you banner */}
+      {/* Scrollable Content Body */}
+      <div className="flex-1 overflow-y-auto mt-4 pr-1">
+        <div className="space-y-4 pb-6">{/* Accepted-by-you banner */}
       {isHelper && request.status === "accepted" && (
         <div className="mb-3 px-3 py-2 rounded bg-blue-100 text-blue-800 text-xs font-semibold">
           This is the delivery you accepted
@@ -398,7 +477,9 @@ function InfoPanel({ request, clearSelection, currentUserHasActiveDelivery }) {
           </div>
         )}
       </div>
-    </div>
+        </div>
+      </div>
+    </motion.div>
   );
 }
 
