@@ -20,7 +20,7 @@ function ClickHandler({ onPick }) {
 
 export default function MinimapPicker({ value, onChange }) {
   return (
-    <div className={`relative w-full h-48 rounded-md overflow-hidden mt-2 border ${
+    <div className={`relative w-full h-72 rounded-md overflow-hidden mt-2 border ${
       value ? "border-blue-500" : "border-border"
     }`}>
       {/* Instruction overlay */}
