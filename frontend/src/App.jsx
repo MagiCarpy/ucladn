@@ -111,7 +111,7 @@ function App() {
 
         {/* MOBILE MENU */}
         {isMenuOpen && (
-          <div className="md:hidden border-t p-4 bg-background">
+          <div className="md:hidden absolute top-14 left-0 w-full border-b bg-background shadow-lg p-4 z-[1999]">
             <nav className="flex flex-col space-y-4">
               {user && (
                 <>
