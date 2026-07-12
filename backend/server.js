@@ -72,7 +72,7 @@ app.use(
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "https://static.cloudflareinsights.com"],
       connectSrc: ["'self'", "https://cloudflareinsights.com"],
-      styleSrc: ["'self'", "https://fonts.googleapis.com"],
+      styleSrc: ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
       imgSrc: [
         "'self'",
         "data:",
@@ -80,6 +80,7 @@ app.use(
         "https://*.openstreetmap.org",
         "https://unpkg.com",
         "https://cdn-icons-png.flaticon.com",
+        "https://cdn.jsdelivr.net"
       ],
     },
   }),
