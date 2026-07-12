@@ -5,7 +5,6 @@ import { RiEmotionLine, RiAttachment2, RiCloseLine, RiArrowUpLine } from "@remix
 import { API_BASE_URL } from "@/config";
 import { useSocket } from "@/context/SocketContext";
 import SecureImage from "@/components/SecureImage";
-import EmojiPicker from "emoji-picker-react";
 import Loading from "../pages/Loading/Loading";
 
 const Chat = ({ requestId }) => {
@@ -13,16 +12,19 @@ const Chat = ({ requestId }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [showPicker, setShowPicker] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const socket = useSocket();
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const textareaRef = useRef(null);
 
-  // FIXME: may be used later
-  // const scrollToBottom = () => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // };
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
     // Replace fetchMessages with socket io
@@ -76,6 +78,10 @@ const Chat = ({ requestId }) => {
       if (resp.ok) {
         setNewMessage("");
         setSelectedFile(null);
+        if (textareaRef.current) {
+          textareaRef.current.style.height = '48px';
+          textareaRef.current.style.overflowY = 'hidden';
+        }
       }
     } catch (error) {
       console.error("Failed to send message", error);
@@ -185,35 +191,26 @@ const Chat = ({ requestId }) => {
               </Button>
             </div>
           )}
-
-          <Button
-            type="button"
-            variant="default"
-            className="h-12 w-12 shrink-0 p-0"
-            onClick={() => setShowPicker((prev) => !prev)}
-            aria-label="Add Emoji"
-          >
-            <RiEmotionLine className="w-4 h-4" />
-          </Button>
-
-          {showPicker && (
-            <div className="absolute bottom-16 right-4 z-50">
-              <EmojiPicker
-                onEmojiClick={(emojiObj) => {
-                  setNewMessage((prev) => prev + emojiObj.emoji);
-                  setShowPicker(false);
-                }}
-                theme="light"
-              />
-            </div>
-          )}
         </div>
-        <input
-          type="text"
+        <textarea
+          ref={textareaRef}
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+          onChange={(e) => {
+            setNewMessage(e.target.value);
+            e.target.style.height = '48px';
+            const scrollHeight = e.target.scrollHeight;
+            e.target.style.height = `${Math.min(scrollHeight, 120)}px`;
+            e.target.style.overflowY = scrollHeight > 120 ? 'auto' : 'hidden';
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSendMessage(e);
+            }
+          }}
+          rows={1}
           placeholder="Type a message..."
-          className="flex-1 border rounded-md px-4 py-2 text-md h-12"
+          className="flex-1 border rounded-md px-4 py-3 text-base min-h-[48px] resize-none overflow-hidden"
           aria-label="Message Input"
         />
         <Button 

@@ -116,7 +116,7 @@ function NewRequest() {
                 maxLength={50}
                 onChange={(e) => setItem(e.target.value)}
                 required
-                className="py-6 text-md"
+                className="py-6 text-base"
               />
             </div>
 
@@ -131,7 +131,7 @@ function NewRequest() {
                 value={description}
                 maxLength={150}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full border border-input rounded-md p-3 min-h-[100px] resize-y bg-background text-md"
+                className="w-full border border-input rounded-md p-3 min-h-[100px] resize-y bg-background text-base"
                 placeholder="Add details about your request..."
               />
             </div>
@@ -141,7 +141,7 @@ function NewRequest() {
               <select
                 value={pickupKey}
                 onChange={(e) => setPickupKey(e.target.value)}
-                className="w-full border border-input rounded-md p-3 bg-background text-md h-12"
+                className="w-full border border-input rounded-md p-3 bg-background text-base h-12"
                 required
               >
                 <option value="" disabled selected></option>
@@ -165,7 +165,7 @@ function NewRequest() {
               <select
                 value={dropoffKey}
                 onChange={(e) => setDropoffKey(e.target.value)}
-                className="w-full border border-input rounded-md p-3 bg-background text-md h-12"
+                className="w-full border border-input rounded-md p-3 bg-background text-base h-12"
                 required
               >
                 <option value="" disabled selected></option>
