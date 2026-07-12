@@ -1,14 +1,15 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { API_BASE_URL } from "@/config";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageContainer } from "@/components/layout/PageContainer";
-import { RiUserLine, RiMailLine, RiHashtag } from "@remixicon/react";
+import { RiUserLine, RiMailLine, RiHashtag, RiSettings3Line, RiLogoutBoxLine, RiBarChartLine } from "@remixicon/react";
+import { ModeToggle } from "@/components/mode-toggle";
 
 function Profile() {
-  const { user, updateUser, authFetch } = useAuth();
+  const { user, updateUser, authFetch, logout } = useAuth();
   const [pfp, setPfp] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [currentProfileImg, setCurrentProfileImg] = useState(
@@ -124,6 +125,39 @@ function Profile() {
                 <span className="font-semibold">Email:</span> {user.email}
               </p>
             </div>
+
+            <div className="pt-4">
+              <Link to="/stats" className="w-full">
+                <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+                  <RiBarChartLine className="w-5 h-5" />
+                  View Your Stats
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          <hr className="border-border" />
+
+          {/* Settings Section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 mb-4">
+              <RiSettings3Line className="w-6 h-6 text-foreground" />
+              <h3 className="text-xl font-semibold">Settings</h3>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-medium text-muted-foreground">Theme</span>
+              <ModeToggle />
+            </div>
+
+            <Button 
+              variant="destructive" 
+              className="w-full mt-4 flex items-center justify-center gap-2"
+              onClick={logout}
+            >
+              <RiLogoutBoxLine className="w-5 h-5" />
+              Logout
+            </Button>
           </div>
         </CardContent>
       </Card>

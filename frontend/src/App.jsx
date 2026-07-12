@@ -21,7 +21,6 @@ import NewRequest from "./pages/Requests/NewRequest";
 import Stats from "./pages/Stats/Stats";
 import RequestDetails from "./pages/Requests/RequestDetails";
 import { useAuth } from "./context/AuthContext";
-import { ModeToggle } from "@/components/mode-toggle";
 import { useToast } from "@/context/toastContext";
 import uclaLogo from "@/assets/cover/Logo.jpg";
 
@@ -78,21 +77,11 @@ function App() {
                   </div>
                 </Link>
 
-                <Link to="/stats" className={isActive("/stats")}>
-                  <div className="flex items-center gap-1">
-                    <RiBarChartLine className="w-4 h-4" /> Stats
-                  </div>
-                </Link>
-
                 <Link to="/profile" className={isActive("/profile")}>
                   <div className="flex items-center gap-1">
                     <RiUserLine className="w-4 h-4" /> Profile
                   </div>
                 </Link>
-
-                <Button onClick={logout} variant="destructive">
-                  Logout
-                </Button>
               </>
             )}
 
@@ -106,13 +95,10 @@ function App() {
                 </Link>
               </>
             )}
-
-            <ModeToggle />
           </nav>
 
           {/* MOBILE NAV TOGGLE */}
           <div className="flex md:hidden items-center gap-2">
-            <ModeToggle />
             <Button variant="ghost" size="icon" onClick={toggleMenu}>
               {isMenuOpen ? (
                 <RiCloseLine className="h-6 w-6" />
@@ -161,16 +147,7 @@ function App() {
                     Profile
                   </Link>
 
-                  <Link
-                    to="/stats"
-                    onClick={closeMenu}
-                    className={isActive("/stats")}
-                  >
-                    Stats
-                  </Link>
-                  <Link onClick={logout} className="text-destructive">
-                    Logout
-                  </Link>
+
                 </>
               )}
 
