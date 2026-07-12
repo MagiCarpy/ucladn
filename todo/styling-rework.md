@@ -40,9 +40,17 @@ This document tracks the tasks for auditing the application's styling architectu
 ## 4. Responsive Design, Accessibility (a11y), and Appearance
 
 - [ ] **Phase 1: Foundation (Current Priority)**
-  - **Responsive Grids:** Implement mobile-first layouts (`flex-col md:flex-row`) across the Map, Dashboard, Chat, and Requests List. Ensure seamless wrapping on iPhones (mobile) and tablet views.
-  - **Mobile Behaviors:** Ensure floating panels (like the Map InfoPanel) stack correctly or snap to the bottom on small screens so they don't block the UI.
-  - **Semantic HTML & Basic a11y:** Audit icon buttons (add `aria-label`), ensure proper `<button>` elements instead of clickable divs, and confirm keyboard tab-indexing focus states work.
+  - [ ] **Responsive Layouts:** Implement mobile-first layouts (`flex-col md:flex-row`) across the App. Ensure seamless wrapping on iPhones (mobile) and tablet views.
+    - [x] Dashboard & Map (NavBar, map container, dynamic InfoPanel)
+    - [x] Profile page & Settings
+    - [x] Cover/Landing page
+    - [ ] Requests List page
+    - [ ] New Request page
+    - [ ] Chat UI
+  - [x] **Mobile Behaviors:** Floating panels (like the Map InfoPanel) stack correctly or snap to the bottom on small screens so they don't block the UI. Implemented fluid iOS-style draggable sheet physics.
+  - [ ] **Semantic HTML & Basic a11y:** Audit icon buttons (add `aria-label`), ensure proper `<button>` elements instead of clickable divs, and confirm keyboard tab-indexing focus states work.
+    - [x] InfoPanel toggle, map controls, navbar navigation
+    - [ ] Remaining buttons in Requests List and Create Request flows
 
 - [ ] **Phase 2: Final Polish & Animations (Postponed)**
   - **Micro-Animations:** Add Framer Motion spring physics for hover states, button click-scales, and accordion menus.
