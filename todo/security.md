@@ -6,14 +6,14 @@ This document serves as a centralized backlog of security enhancements and defen
 
 ## 1. WebSocket Security Backlog
 
-### [ ] **Enforce Handshake Authentication on Sockets**
+### [x] **Enforce Handshake Authentication on Sockets**
 
 - **Vulnerability:** Socket.io currently accepts connections from any client without validating their identity. This allows unauthenticated users to listen to active event streams and system logs.
 - **Remediation:**
   - Add connection middleware in [server.js](file:///.../ucladn/backend/server.js).
   - Extract and parse request cookies during the Socket.io handshake (using the JWT logic in [auth.js](file:///.../ucladn/backend/middleware/auth.js)). Reject the handshake if no valid session cookie is provided.
 
-### [ ] **Scope Private Chat Broadcasts to Rooms**
+### [x] **Scope Private Chat Broadcasts to Rooms**
 
 - **Vulnerability:** Chat messages are broadcasted globally using `req.io.emit("message:sent")`, delivering the contents of private conversations to every connected socket on the network.
 - **Remediation:**
@@ -23,16 +23,16 @@ This document serves as a centralized backlog of security enhancements and defen
     req.io.to(requestId).emit("message:sent", message_data);
     ```
 
-### [ ] **Restrict Room Access & Validate Joins**
+### [x] **Restrict Room Access & Validate Joins**
 
 - **Vulnerability:** Sockets can join any room arbitrarily via client-controlled emissions to `join_chat`. The server does not check if the joining socket is authorized to view the chat messages.
 - **Remediation:**
   - Update the connection event handler in [server.js](file:///.../ucladn/backend/server.js).
   - Query the request database on `join_chat` and verify that the socket's authenticated user ID matches either the `userId` (requester) or `helperId` (deliverer) for that request.
 
-### [ ] **Enforce Rate Limiting on WebSocket Events**
+### [x] **Enforce Rate Limiting on WebSocket Events**
 
-- **Vulnerability:** Sockets lack rates-of-transmission limits, leaving the server vulnerable to event-flooding and Denial of Service (DoS) attacks.
+- **Vulnerability:** Sockets lack rates-of-transmission limits, leaving the server vulnerable to event-floener-flooding and Denial of Service (DoS) attacks.
 - **Remediation:**
   - Use connection tracking (e.g. `socket.io-limiter` or raw memory tracking) in [server.js](file:///.../ucladn/backend/server.js) to throttle or disconnect sockets emitting excessive events.
 
@@ -47,12 +47,16 @@ This document serves as a centralized backlog of security enhancements and defen
   - Configure a strict rate limiter (e.g., using `express-rate-limit` with a Redis store) on login and registration routes.
   - Limit requests to a maximum of 5 attempts per 15 minutes per IP address.
 
-### [ ] **Credential Stuffing Delay Tarpit (Exponential Backoff)**
+### [x] **Credential Stuffing Delay Tarpit (Exponential Backoff)**
 
 - **Vulnerability:** Standard rate limiters block requests completely, but automated attackers can shift IP addresses. Fast fail responses still allow them to test passwords quickly.
 - **Remediation:**
   - Implement a login "tarpit" that introduces a progressive delay on failed authentication attempts.
-  - On a failed login, delay the server response asynchronously (e.g. `1s`, `2s`, `4s`, `8s` for consecutive failures) or return a `429 Too Many Requests` status code with a dynamic `Retry-After` header indicating the backoff window.
+  - **Specific Implementation Details:**
+    1. **Failure Tracking**: Track failed attempts in Redis using dual keys: `failed_logins:ip:<ip_address>` and `failed_logins:email:<email_address>` with a TTL of 1 hour.
+    2. **Backoff Math**: Calculate the delay dynamically: `delay = min(16, Math.pow(2, failures - 1)) * 1000` (1s, 2s, 4s, 8s, capped at 16s).
+    3. **Non-blocking Delay**: Use a helper function `await new Promise(resolve => setTimeout(resolve, delay))` in the error-handling block of `UserController.login` in [userController.js](file:///.../ucladn/backend/controllers/userController.js) before sending the `401 Unauthorized` response.
+    4. **Reset Counter**: On a successful login, delete the failure keys for both the IP and the email in Redis so the user is not penalized on future successful logins.
 
 ### [ ] **Global Token Bucket API Rate Limiting**
 

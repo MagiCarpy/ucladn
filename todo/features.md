@@ -20,6 +20,7 @@ This document outlines upcoming feature suggestions, convenience routing brainst
 
 ### Medium (Logic Updates & API Integrations)
 
+- [ ] **Dropoff vs. Hand-off Delivery Modes:** Implement options for "Dropoff" (package is left at a secure location like a dorm lobby or desk, requiring a delivery photo) vs. "Hand-off" (courier meets recipient in person, requiring real-time coordinate tracking and matching 4-digit pin codes to verify transaction).
 - [ ] **Privacy Considerations:** Mask exact user coordinates on the public map with a randomized offset radius (e.g., 25–50 meters) until a courier officially accepts. Automatically delete message logs and attachment images after a request is archived.
 - [ ] **Easy Pickup Locations:** Manually research and integrate designated pickup/dropoff points across the UCLA campus (e.g., Ackerman Turnaround, Hill Housing Hubs, Court of Sciences, Lu Valle Commons).
 - [ ] **Location-Based Sorting:** Allow couriers to sort open delivery requests by proximity to their current coordinates or dropoff proximity using HTML5 Geolocation API.
