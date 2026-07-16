@@ -47,7 +47,7 @@ export const User = sequelize.define(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
           if (!strongRegex.test(value)) {
             throw new Error(
-              `Password must have: ≥8 characters, uppercase letter, lowercase letter, special character: @$!%*?&.`
+              `Password must have: ≥8 characters, uppercase letter, lowercase letter, special character: @$!%*?&.`,
             );
           }
         },
@@ -66,7 +66,6 @@ export const User = sequelize.define(
     tableName: "users",
     timestamps: true,
     paranoid: true,
-    indexes: [{ fields: ["username"] }, { fields: ["email"] }],
     validate: {
       uniqueUsernameEmail() {
         if (this.username.toLowerCase() === this.email.toLowerCase()) {
@@ -86,5 +85,5 @@ export const User = sequelize.define(
         }
       },
     },
-  }
+  },
 );
