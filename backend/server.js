@@ -1,13 +1,7 @@
 import express from "express";
 import path from "path";
-import { sequelize, createDatabaseIfNotExists } from "./config/db.js";
-import { connectRedis } from "./config/redisDb.js";
-import {
-  ROOT_PATH,
-  ROOT_ENV_PATH,
-  PUBLIC_PATH,
-  UPLOADS_PATH,
-} from "./config/paths.js";
+import jwt from "jsonwebtoken";
+import cookie from "cookie";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
@@ -16,12 +10,20 @@ import compression from "compression";
 import helmet from "helmet";
 import cors from "cors";
 import dotenv from "dotenv";
+import { sequelize, createDatabaseIfNotExists } from "./config/db.js";
+import { connectRedis } from "./config/redisDb.js";
+import {
+  ROOT_PATH,
+  ROOT_ENV_PATH,
+  PUBLIC_PATH,
+  UPLOADS_PATH,
+} from "./config/paths.js";
 import { validateEnv } from "./config/envValidator.js";
 import userRoutes from "./routes/user.js";
 import healthRoutes from "./routes/health.js";
 import requestRoutes from "./routes/request.js";
 import directionsRoutes from "./routes/directions.js";
-import "./models/request.model.js";
+import { Request } from "./models/request.model.js";
 import "./models/associations.js";
 import "./models/message.model.js";
 import "./models/associations.js";
@@ -34,6 +36,7 @@ const PORT = parseInt(process.env.PORT) || 5000;
 export const app = express();
 const server = createServer(app); // http server (for socket.io)
 
+app.set("trust proxy", 1);
 // Socket.io INIT
 const io = new Server(server, {
   cors: {
@@ -43,13 +46,78 @@ const io = new Server(server, {
   },
 });
 
+io.use((socket, next) => {
+  const cookieHeader = socket.request.headers.cookie;
+  if (!cookieHeader) {
+    return next(new Error("Authentication error: No cookies found"));
+  }
+
+  const cookies = cookie.parse(cookieHeader);
+  const accessToken = cookies.accessToken;
+
+  if (!accessToken) {
+    return next(new Error("Authentication error: Missing access token"));
+  }
+
+  try {
+    const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+
+    socket.userId = decoded.userId;
+    next();
+  } catch (error) {
+    return next(new Error("Authentication error: Invalid token"));
+  }
+});
+
 io.on("connection", (socket) => {
   console.log("Client Connected:", socket.id);
 
+  socket.use((getPackedSettings, next) => {
+    const now = Date.now();
+    const LIMIT = 30;
+    const WINDOW_MS = 10000; // 10 seconds
+
+    if (!socket.eventTimestamps) {
+      socket.eventTimestamps = [];
+    }
+
+    socket.eventTimestamps = socket.eventTimestamps.filter(
+      (time) => now - time < WINDOW_MS,
+    );
+
+    if (socket.eventTimestamps.length >= LIMIT) {
+      console.warn(`Socket ${socket.id} rate limited.`);
+      socket.emit("error", "Rate limit exceeded. Please slow down.");
+      if (socket.eventTimestamps.length >= LIMIT * 2) {
+        socket.disconnect(true);
+      }
+      return next(new Error("Rate limit exceeded"));
+    }
+    socket.eventTimestamps.push(now);
+    next();
+  });
+
   // chatId is "requestId" FIXME: make random??
-  socket.on("join_chat", (chatId) => {
-    socket.join(chatId);
-    console.log("Client joined:", chatId);
+  socket.on("join_chat", async (chatId) => {
+    try {
+      const request = await Request.findByPk(chatId);
+      if (!request) {
+        socket.emit("error", "Request not found");
+        return;
+      }
+      if (
+        request.userId !== socket.userId &&
+        request.helperId !== socket.userId
+      ) {
+        socket.emit("error", "Unauthorized to join this chat");
+        return;
+      }
+      socket.join(chatId);
+      console.log(`User ${socket.userId} joined:`, chatId);
+    } catch (error) {
+      console.error("Error joining chat room:", error);
+      socket.emit("error", "Failed to join chat");
+    }
   });
 
   socket.on("disconnect", () => {
@@ -80,7 +148,7 @@ app.use(
         "https://*.openstreetmap.org",
         "https://unpkg.com",
         "https://cdn-icons-png.flaticon.com",
-        "https://cdn.jsdelivr.net"
+        "https://cdn.jsdelivr.net",
       ],
     },
   }),

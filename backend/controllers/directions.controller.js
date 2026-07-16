@@ -29,7 +29,7 @@ export const getDirections = asyncHandler(async (req, res) => {
           Authorization: process.env.ORS_API_KEY,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     const feature = resp.data.features[0];
