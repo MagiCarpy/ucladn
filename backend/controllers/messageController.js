@@ -72,7 +72,7 @@ const MessageController = {
       attachment: message.attachment || null,
     };
 
-    req.io.emit("message:sent", message_data);
+    req.io.to(requestId.toString()).emit("message:sent", message_data);
 
     return res.status(201).json({
       message: "Message sent",
@@ -98,9 +98,7 @@ const MessageController = {
 
     const messages = await Message.findAll({
       where: { requestId },
-      include: [
-        { model: User, as: "sender", attributes: ["id", "username"] },
-      ],
+      include: [{ model: User, as: "sender", attributes: ["id", "username"] }],
       order: [["createdAt", "ASC"]],
       paranoid: false,
     });
@@ -117,7 +115,7 @@ const MessageController = {
           senderPic: sender.image,
           attachment: msg.attachment || null,
         };
-      })
+      }),
     );
 
     return res.status(200).json({ messages: enrichedMessages });
@@ -137,7 +135,9 @@ const MessageController = {
     }
 
     // Find the request associated with the message
-    let request = await Request.findByPk(message.requestId, { paranoid: false });
+    let request = await Request.findByPk(message.requestId, {
+      paranoid: false,
+    });
 
     if (!request) {
       return res.sendFile(path.join(PUBLIC_PATH, "default.jpg"));
@@ -145,7 +145,9 @@ const MessageController = {
 
     // Verify authorization: Only requester or helper
     if (request.userId !== req.user.id && request.helperId !== req.user.id) {
-      return res.status(403).json({ message: "Not authorized to view this attachment" });
+      return res
+        .status(403)
+        .json({ message: "Not authorized to view this attachment" });
     }
 
     let filePath = path.join(PUBLIC_PATH, "default.jpg");
