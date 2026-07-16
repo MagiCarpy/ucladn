@@ -61,30 +61,59 @@ const UserController = {
     // FIXME: assumes login form has email and password (can add username later if needed)
     const { email, password } = req.body;
 
+    const ip = req.ip;
+    const ipKey = `failed_logins:ip:${ip}`;
+    const emailKey = email ? `failed_logins:email:${email}` : null;
+
+    // Helper for log failure rate limit tracking (per IP and per email)
+    const handleLoginFailure = async (message) => {
+      const ipFailures = await redisClient.incr(ipKey);
+      await redisClient.expire(ipKey, 3600);
+
+      let emailFailures = 0;
+      if (emailKey) {
+        emailFailures = await redisClient.incr(emailKey);
+        await redisClient.expire(emailKey, 3600);
+      }
+
+      const failures = Math.max(ipFailures, emailFailures);
+      const delay = Math.min(16, Math.pow(2, failures - 1)) * 1000; // Exponential backoff (1, 2, 4, ..., 16 secs)
+
+      console.warn(
+        `Failed login attempt from IP: ${ip}, Email: ${email || "N/A"}. Failures: ${failures}. Delaying response by ${delay}ms.`,
+      ); // FIXME: delete later after testing (security through obscurity)
+
+      await new Promise((resolve) => setTimeout(resolve, delay));
+
+      return res.status(401).json({ message });
+    };
+
     if (!email || !password)
-      return res.status(401).json({
-        message: "User login failed. Invalid inputs.",
-      });
+      return await handleLoginFailure("User login failed. Invalid inputs.");
 
     const user = await User.findOne({ where: { email: email } });
 
     if (!user)
-      return res
-        .status(401)
-        .json({ message: "User login failed. No user found." });
+      return await handleLoginFailure("User login failed. No user found.");
 
     const isValidUser = bcrypt.compareSync(password, user.password);
 
     if (!isValidUser)
-      return res.status(401).json({
-        message: "User login failed. Bad credentials.",
-      });
+      return await handleLoginFailure("User login failed. Bad credentials.");
+
+    // Clear failed login counters in Redis on successful login
+    await redisClient.del(ipKey);
+    if (emailKey) {
+      await redisClient.del(emailKey);
+    }
 
     // Create jwt tokens and save refresh to redis
     const accessToken = createAccessToken(user.id);
     const refreshToken = createRefreshToken(user.id);
 
-    await redisClient.set(`session:${user.id}`, refreshToken, { EX: REFRESH_EXP_TIME });
+    await redisClient.set(`session:${user.id}`, refreshToken, {
+      EX: REFRESH_EXP_TIME,
+    });
 
     res.cookie("accessToken", accessToken, {
       ...JWTCookieConfig,
@@ -102,7 +131,7 @@ const UserController = {
     try {
       const decodedRefresh = jwt.verify(
         req.cookies.refreshToken || null,
-        process.env.REFRESH_TOKEN_SECRET
+        process.env.REFRESH_TOKEN_SECRET,
       );
       await redisClient.del(`session:${decodedRefresh.userId}`);
     } catch (error) {

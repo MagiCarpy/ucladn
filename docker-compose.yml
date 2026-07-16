@@ -54,10 +54,13 @@ services:
         "on",
         ">${REDIS_PASS}",
         "~session:*",
+        "~failed_logins:*",
         "-@all",
         "+get",
         "+set",
         "+del",
+        "+incr",
+        "+expire",
       ]
     env_file:
       - .env
